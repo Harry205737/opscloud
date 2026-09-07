@@ -4,252 +4,2965 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Baw Baw Aerial Services — Operations Hub</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-:root{--bg:#f4f6f8;--panel:#fff;--ink:#17202a;--muted:#66717d;--line:#dce2e8;--accent:#146ef5;--good:#17834b;--warn:#b66a00;--bad:#c93434}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-header{background:#111923;color:#fff;padding:17px 24px;display:flex;align-items:center;justify-content:space-between;gap:15px;position:sticky;top:0;z-index:10}
-h1{font-size:19px;margin:0}header small{color:#b9c4d0}.container{max-width:1500px;margin:auto;padding:20px}
-button{border:0;border-radius:8px;padding:9px 13px;background:var(--accent);color:#fff;font-weight:650;cursor:pointer}button.secondary{background:#edf1f5;color:#263341}button.danger{background:#c93434}
-input,select,textarea{width:100%;padding:10px;border:1px solid #ccd4dc;border-radius:8px;background:#fff;color:var(--ink)}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:17px}.card,.panel{background:#fff;border:1px solid var(--line);border-radius:13px;box-shadow:0 6px 25px #17202a0d}.card{padding:16px}.metric{font-size:28px;font-weight:750}.label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:13px}.toolbar input{max-width:360px}.toolbar select{width:auto;min-width:180px}
-.panel{overflow:hidden}.head{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}.head h2{margin:0;font-size:16px}
-table{width:100%;border-collapse:collapse}th,td{padding:11px 13px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}th{background:#f8fafb;color:var(--muted);font-size:11px;text-transform:uppercase}tr:last-child td{border-bottom:0}
-.badge{display:inline-block;padding:3px 8px;border-radius:99px;font-size:11px;font-weight:700}.ok{background:#e7f6ee;color:var(--good)}.soon{background:#fff2dc;color:var(--warn)}.expired{background:#fde8e8;color:var(--bad)}.neutral{background:#edf1f5;color:#536170}
-.notice{padding:11px 13px;background:#fff7e6;border:1px solid #f2d18c;border-radius:9px;margin-bottom:15px;color:#6e4b00}.help{font-size:12px;color:var(--muted)}
-.modal{display:none;position:fixed;inset:0;background:#0a141e99;z-index:50;padding:18px;overflow:auto}.modal.open{display:block}.dialog{max-width:780px;margin:4vh auto;background:#fff;border-radius:14px;padding:20px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px}
-.login{max-width:500px;margin:8vh auto;background:#fff;padding:25px;border-radius:15px;box-shadow:0 10px 40px #17202a14}.login h2{margin-top:0}.tabs{display:flex;gap:6px;margin-bottom:15px}
-#app{display:none}.empty{text-align:center;padding:35px;color:var(--muted)}
-@media(max-width:850px){.grid{grid-template-columns:1fr 1fr}.formgrid{grid-template-columns:1fr}.full{grid-column:auto}th:nth-child(4),td:nth-child(4){display:none}}
-@media(max-width:600px){header{padding:13px}.container{padding:12px}.grid{gap:8px}}
+:root{
+  --bg:#f4f6f8;
+  --panel:#fff;
+  --ink:#17202a;
+  --muted:#66717d;
+  --line:#dce2e8;
+  --accent:#146ef5;
+  --good:#17834b;
+  --warn:#b66a00;
+  --bad:#c93434
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font:14px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
+}
+
+header{
+  background:#111923;
+  color:#fff;
+  padding:17px 24px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  position:sticky;
+  top:0;
+  z-index:10
+}
+
+h1{font-size:19px;margin:0}
+h2{margin-top:0}
+header small{color:#b9c4d0}
+
+.container{
+  max-width:1500px;
+  margin:auto;
+  padding:20px
+}
+
+button{
+  border:0;
+  border-radius:8px;
+  padding:9px 13px;
+  background:var(--accent);
+  color:#fff;
+  font-weight:650;
+  cursor:pointer
+}
+
+button.secondary{
+  background:#edf1f5;
+  color:#263341
+}
+
+button.danger{
+  background:#c93434
+}
+
+button:disabled{
+  opacity:.55;
+  cursor:not-allowed
+}
+
+input,select,textarea{
+  width:100%;
+  padding:10px;
+  border:1px solid #ccd4dc;
+  border-radius:8px;
+  background:#fff;
+  color:var(--ink)
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:13px;
+  margin-bottom:17px
+}
+
+.card,.panel,.login{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:13px;
+  box-shadow:0 6px 25px #17202a0d
+}
+
+.card{padding:16px}
+
+.metric{
+  font-size:28px;
+  font-weight:750
+}
+
+.label{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  color:var(--muted)
+}
+
+.toolbar{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:13px
+}
+
+.toolbar input{
+  max-width:360px
+}
+
+.toolbar select{
+  width:auto;
+  min-width:180px
+}
+
+.panel{
+  overflow:hidden
+}
+
+.head{
+  padding:14px 16px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px
+}
+
+.head h2{
+  margin:0;
+  font-size:16px
+}
+
+table{
+  width:100%;
+  border-collapse:collapse
+}
+
+th,td{
+  padding:11px 13px;
+  border-bottom:1px solid var(--line);
+  text-align:left;
+  vertical-align:middle
+}
+
+th{
+  background:#f8fafb;
+  color:var(--muted);
+  font-size:11px;
+  text-transform:uppercase
+}
+
+tr:last-child td{
+  border-bottom:0
+}
+
+.badge{
+  display:inline-block;
+  padding:3px 8px;
+  border-radius:99px;
+  font-size:11px;
+  font-weight:700
+}
+
+.ok{
+  background:#e7f6ee;
+  color:var(--good)
+}
+
+.soon{
+  background:#fff2dc;
+  color:var(--warn)
+}
+
+.expired{
+  background:#fde8e8;
+  color:var(--bad)
+}
+
+.neutral{
+  background:#edf1f5;
+  color:#536170
+}
+
+.notice{
+  padding:11px 13px;
+  background:#fff7e6;
+  border:1px solid #f2d18c;
+  border-radius:9px;
+  margin-bottom:15px;
+  color:#6e4b00
+}
+
+.help{
+  font-size:12px;
+  color:var(--muted)
+}
+
+.error{
+  color:var(--bad)
+}
+
+.success{
+  color:var(--good)
+}
+
+.login{
+  max-width:520px;
+  margin:8vh auto;
+  padding:25px
+}
+
+.login h2{
+  margin-top:0
+}
+
+.tabs{
+  display:flex;
+  gap:6px;
+  margin-bottom:15px
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#0a141e99;
+  z-index:50;
+  padding:18px;
+  overflow:auto
+}
+
+.modal.open{
+  display:block
+}
+
+.dialog{
+  max-width:820px;
+  margin:4vh auto;
+  background:#fff;
+  border-radius:14px;
+  padding:20px
+}
+
+.formgrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px
+}
+
+.full{
+  grid-column:1/-1
+}
+
+.actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:15px
+}
+
+#app{
+  display:none
+}
+
+.empty{
+  text-align:center;
+  padding:35px;
+  color:var(--muted)
+}
+
+.setupbox{
+  background:#f7f9fb;
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:12px;
+  margin-top:12px
+}
+
+.setupbox textarea{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12px;
+  min-height:280px
+}
+
+.smallbuttons{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:8px
+}
+
+@media(max-width:850px){
+  .grid{
+    grid-template-columns:1fr 1fr
+  }
+
+  .formgrid{
+    grid-template-columns:1fr
+  }
+
+  .full{
+    grid-column:auto
+  }
+}
+
+@media(max-width:600px){
+  header{
+    padding:13px
+  }
+
+  .container{
+    padding:12px
+  }
+
+  .grid{
+    gap:8px
+  }
+
+  .toolbar input{
+    max-width:none
+  }
+
+  .toolbar select{
+    width:100%
+  }
+}
 </style>
 </head>
+
 <body>
 
 <header>
- <div><h1>✈ Baw Baw Aerial Services</h1><small>Cloud Operations & Compliance Hub</small></div>
- <div id="headerActions" style="display:flex;gap:7px;flex-wrap:wrap"></div>
+
+<div>
+<h1>✈ Baw Baw Aerial Services</h1>
+<small>Cloud Operations & Compliance Hub</small>
+</div>
+
+<div id="headerActions"
+style="display:flex;gap:7px;flex-wrap:wrap">
+</div>
+
 </header>
 
+
+<!-- LOGIN -->
+
 <section id="loginScreen" class="login">
- <h2>Operations Hub</h2>
- <p class="help">Sign in to access your cloud-stored operational records and documents.</p>
- <div class="tabs"><button id="signInTab" onclick="showAuth('signin')">Sign in</button><button class="secondary" onclick="showAuth('signup')">Create account</button></div>
- <form id="authForm">
-   <input id="email" type="email" placeholder="Email" required style="margin-bottom:9px">
-   <input id="password" type="password" placeholder="Password" required minlength="6" style="margin-bottom:9px">
-   <button id="authButton" type="submit">Sign in</button>
- </form>
- <p id="authMsg" class="help"></p>
- <details style="margin-top:15px"><summary>First-time setup</summary>
- <p class="help">Create a Supabase project, create the database/storage using the SQL supplied in this file's <b>SETUP_SQL</b> constant, then enter your project URL and publishable/anon key in the CONFIG section below.</p>
- </details>
+
+<h2>Operations Hub</h2>
+
+<p class="help">
+Cloud-stored operational records and documents for Baw Baw Aerial Services.
+</p>
+
+<div class="tabs">
+
+<button
+id="signInTab"
+onclick="showAuth('signin')">
+Sign in
+</button>
+
+<button
+id="signUpTab"
+class="secondary"
+onclick="showAuth('signup')">
+Create account
+</button>
+
+</div>
+
+
+<form id="authForm">
+
+<input
+id="email"
+type="email"
+placeholder="Email"
+autocomplete="email"
+required
+style="margin-bottom:9px">
+
+
+<input
+id="password"
+type="password"
+placeholder="Password"
+autocomplete="current-password"
+required
+minlength="6"
+style="margin-bottom:9px">
+
+
+<button
+id="authButton"
+type="submit">
+Sign in
+</button>
+
+</form>
+
+
+<p id="authMsg" class="help"></p>
+
+
+<details style="margin-top:15px">
+
+<summary>Connection / setup</summary>
+
+<div class="setupbox">
+
+<p class="help">
+This application uses Supabase Auth, Postgres and private Storage.
+GitHub Pages hosts the application.
+</p>
+
+<p>
+<b>Connection:</b>
+<span id="connectionStatus">Checking...</span>
+</p>
+
+<div class="smallbuttons">
+
+<button
+type="button"
+class="secondary"
+onclick="testConnection()">
+Test connection
+</button>
+
+<button
+type="button"
+class="secondary"
+onclick="showSetup()">
+Show setup SQL
+</button>
+
+<button
+type="button"
+class="secondary"
+onclick="downloadSQL()">
+Download setup.sql
+</button>
+
+</div>
+
+</div>
+
+</details>
+
 </section>
 
+
+
+<!-- APPLICATION -->
+
 <main id="app" class="container">
- <div class="notice"><b>Cloud storage:</b> records are stored in Supabase Postgres and uploaded documents in a private Supabase Storage bucket. GitHub hosts only this application code. Supabase supports private buckets and fine-grained storage policies. <a href="https://supabase.com/docs/guides/storage/quickstart" target="_blank">Storage documentation</a></div>
- <div class="grid">
-  <div class="card"><div class="label">Documents</div><div class="metric" id="mTotal">0</div></div>
-  <div class="card"><div class="label">Current</div><div class="metric" id="mCurrent">0</div></div>
-  <div class="card"><div class="label">Expiring ≤30 days</div><div class="metric" id="mSoon">0</div></div>
-  <div class="card"><div class="label">Expired</div><div class="metric" id="mExpired">0</div></div>
- </div>
- <div class="toolbar">
-   <button onclick="openModal()">+ Add document</button>
-   <input id="search" placeholder="Search documents, references, aircraft…" oninput="render()">
-   <select id="catFilter" onchange="render()"><option value="">All categories</option></select>
-   <select id="statusFilter" onchange="render()"><option value="">All statuses</option><option value="current">Current</option><option value="soon">Expiring soon</option><option value="expired">Expired</option><option value="nodate">No expiry</option></select>
- </div>
- <section class="panel">
-  <div class="head"><h2>Document register</h2><span class="help" id="syncStatus">Cloud connected</span></div>
-  <div style="overflow:auto"><table><thead><tr><th>Document</th><th>Category</th><th>Expiry</th><th>Retention</th><th>File</th><th>Actions</th></tr></thead><tbody id="rows"></tbody></table></div>
- </section>
- <section class="panel" style="margin-top:17px">
-  <div class="head"><h2>Operational register</h2><span class="help">Use this as your master compliance register</span></div>
-  <div style="overflow:auto"><table><thead><tr><th>Category</th><th>Examples</th><th>Suggested control</th></tr></thead><tbody id="recommendations"></tbody></table></div>
- </section>
+
+<div class="notice">
+
+<b>Cloud storage:</b>
+
+Documents are stored in a private Supabase Storage bucket and their
+records are stored in Supabase Postgres.
+
+GitHub only hosts the application.
+
+<br>
+
+<span class="help">
+Never put a Supabase service_role or secret key into this HTML.
+</span>
+
+</div>
+
+
+<!-- DASHBOARD -->
+
+<div class="grid">
+
+<div class="card">
+
+<div class="label">
+Documents
+</div>
+
+<div
+class="metric"
+id="mTotal">
+0
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="label">
+Current
+</div>
+
+<div
+class="metric"
+id="mCurrent">
+0
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="label">
+Expiring ≤30 days
+</div>
+
+<div
+class="metric"
+id="mSoon">
+0
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="label">
+Expired
+</div>
+
+<div
+class="metric"
+id="mExpired">
+0
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- TOOLBAR -->
+
+<div class="toolbar">
+
+<button onclick="openModal()">
++ Add document
+</button>
+
+<input
+id="search"
+placeholder="Search documents, references, aircraft..."
+oninput="render()">
+
+
+<select
+id="catFilter"
+onchange="render()">
+
+<option value="">
+All categories
+</option>
+
+</select>
+
+
+<select
+id="statusFilter"
+onchange="render()">
+
+<option value="">
+All statuses
+</option>
+
+<option value="current">
+Current
+</option>
+
+<option value="soon">
+Expiring soon
+</option>
+
+<option value="expired">
+Expired
+</option>
+
+<option value="nodate">
+No expiry
+</option>
+
+</select>
+
+
+<button
+class="secondary"
+onclick="loadDocs()">
+↻ Refresh
+</button>
+
+</div>
+
+
+
+<!-- DOCUMENT REGISTER -->
+
+<section class="panel">
+
+<div class="head">
+
+<h2>
+Document register
+</h2>
+
+<span
+class="help"
+id="syncStatus">
+Cloud connected
+</span>
+
+</div>
+
+
+<div style="overflow:auto">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+Document
+</th>
+
+<th>
+Category
+</th>
+
+<th>
+Expiry
+</th>
+
+<th>
+Retention
+</th>
+
+<th>
+File
+</th>
+
+<th>
+Actions
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="rows">
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+
+<!-- RECOMMENDATIONS -->
+
+<section
+class="panel"
+style="margin-top:17px">
+
+<div class="head">
+
+<h2>
+Operational register
+</h2>
+
+<span class="help">
+Practical master compliance register
+</span>
+
+</div>
+
+
+<div style="overflow:auto">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+Category
+</th>
+
+<th>
+Examples
+</th>
+
+<th>
+Suggested control
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="recommendations">
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
 </main>
 
-<div id="modal" class="modal"><div class="dialog">
- <h2 id="modalTitle">Add document</h2>
- <form id="docForm"><div class="formgrid">
-  <div><label>Document name *</label><input id="dName" required placeholder="ReOC Certificate"></div>
-  <div><label>Category *</label><select id="dCategory" required></select></div>
-  <div><label>Reference / document number</label><input id="dRef"></div>
-  <div><label>Aircraft / asset</label><input id="dAsset" placeholder="DJI Mavic 3 / Aircraft registration"></div>
-  <div><label>Issue date</label><input id="dIssue" type="date"></div>
-  <div><label>Expiry / review date</label><input id="dExpiry" type="date"></div>
-  <div><label>Retention</label><select id="dRetention"><option>No specific retention entered</option><option>3 years</option><option>7 years</option><option>7 years after person leaves</option><option>Permanent / current certificate</option></select></div>
-  <div><label>Version</label><input id="dVersion" placeholder="Rev 1.0"></div>
-  <div class="full"><label>Notes</label><textarea id="dNotes" rows="3" placeholder="Conditions, applicable operation, renewal requirements, etc."></textarea></div>
-  <div class="full"><label>Document file</label><input id="dFile" type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.jpg,.jpeg,.png"></div>
- </div><div class="actions"><button type="button" class="secondary" onclick="closeModal()">Cancel</button><button type="submit">Save to cloud</button></div></form>
-</div></div>
+
+
+<!-- ADD DOCUMENT MODAL -->
+
+<div id="modal" class="modal">
+
+<div class="dialog">
+
+<h2 id="modalTitle">
+Add document
+</h2>
+
+
+<form id="docForm">
+
+<div class="formgrid">
+
+
+<div>
+
+<label>
+Document name *
+</label>
+
+<input
+id="dName"
+required
+placeholder="ReOC Certificate">
+
+</div>
+
+
+<div>
+
+<label>
+Category *
+</label>
+
+<select
+id="dCategory"
+required>
+</select>
+
+</div>
+
+
+<div>
+
+<label>
+Reference / document number
+</label>
+
+<input id="dRef">
+
+</div>
+
+
+<div>
+
+<label>
+Aircraft / asset
+</label>
+
+<input
+id="dAsset"
+placeholder="DJI Mavic 3 / aircraft registration">
+
+</div>
+
+
+<div>
+
+<label>
+Issue date
+</label>
+
+<input
+id="dIssue"
+type="date">
+
+</div>
+
+
+<div>
+
+<label>
+Expiry / review date
+</label>
+
+<input
+id="dExpiry"
+type="date">
+
+</div>
+
+
+<div>
+
+<label>
+Retention
+</label>
+
+<select id="dRetention">
+
+<option>
+No specific retention entered
+</option>
+
+<option>
+3 years
+</option>
+
+<option>
+7 years
+</option>
+
+<option>
+7 years after person leaves
+</option>
+
+<option>
+Permanent / current certificate
+</option>
+
+</select>
+
+</div>
+
+
+<div>
+
+<label>
+Version
+</label>
+
+<input
+id="dVersion"
+placeholder="Rev 1.0">
+
+</div>
+
+
+<div class="full">
+
+<label>
+Notes
+</label>
+
+<textarea
+id="dNotes"
+rows="3"
+placeholder="Conditions, applicable operation, renewal requirements, etc.">
+</textarea>
+
+</div>
+
+
+<div class="full">
+
+<label>
+Document file
+</label>
+
+<input
+id="dFile"
+type="file"
+accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.jpg,.jpeg,.png">
+
+<div class="help">
+Upload the actual document to your private cloud storage.
+</div>
+
+</div>
+
+
+</div>
+
+
+<div class="actions">
+
+<button
+type="button"
+class="secondary"
+onclick="closeModal()">
+Cancel
+</button>
+
+<button
+id="saveButton"
+type="submit">
+Save to cloud
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+
+<!-- SETUP SQL MODAL -->
+
+<div id="setupModal" class="modal">
+
+<div class="dialog">
+
+<h2>
+Supabase setup SQL
+</h2>
+
+<p class="help">
+
+Copy everything in the box below into:
+
+<b>
+Supabase → SQL Editor → New query
+</b>
+
+Then click Run.
+
+<br><br>
+
+Only copy the SQL in the box.
+Do not copy this HTML.
+
+</p>
+
+
+<textarea
+id="sqlBox"
+readonly>
+</textarea>
+
+
+<div class="actions">
+
+<button
+class="secondary"
+onclick="copySQL()">
+Copy SQL
+</button>
+
+<button
+class="secondary"
+onclick="downloadSQL()">
+Download .sql
+</button>
+
+<button
+onclick="closeSetup()">
+Close
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
 
 <script>
-/* ================================================================
-   CONFIG — put your Supabase Project URL and publishable/anon key here.
-   These are safe to expose in a browser ONLY when your RLS policies
-   are correctly configured. Never put a service_role/secret key here.
-================================================================ */
-const CONFIG={
- SUPABASE_URL:"https://takjtswcybbvvuftesvl.supabase.co",
- SUPABASE_KEY:"sb_publishable_MO_FAaZR6ws-g_Stzq9F_Q_BBL0d4pV"
-};
 
 /* ================================================================
-   SETUP_SQL — run this ONCE in Supabase SQL Editor.
+   SUPABASE CONFIGURATION
+
+   IMPORTANT:
+   Keep the quotation marks around both values.
+
+   Use your Supabase PUBLISHABLE / ANON key.
+
+   NEVER use service_role / secret here.
 ================================================================ */
-const SETUP_SQL=String.raw`
+
+const CONFIG = {
+
+  SUPABASE_URL:
+    "https://takjtswcybbvvuftesvl.supabase.co",
+
+  SUPABASE_KEY:
+    "sb_publishable_MO_FAaZR6ws-g_Stzq9F_Q_BBL0d4pV"
+
+};
+
+
+
+/* ================================================================
+   DATABASE SETUP SQL
+
+   This is ONLY for the Supabase SQL Editor.
+================================================================ */
+
+const SETUP_SQL = String.raw`
+
 create table if not exists public.documents (
- id uuid primary key default gen_random_uuid(),
- user_id uuid not null references auth.users(id) on delete cascade,
- name text not null,
- category text not null,
- reference_no text,
- asset text,
- issue_date date,
- expiry_date date,
- retention text,
- version text,
- notes text,
- file_path text,
- file_name text,
- file_type text,
- file_size bigint,
- created_at timestamptz not null default now(),
- updated_at timestamptz not null default now()
+
+  id uuid primary key default gen_random_uuid(),
+
+  user_id uuid not null
+    references auth.users(id)
+    on delete cascade,
+
+  name text not null,
+
+  category text not null,
+
+  reference_no text,
+
+  asset text,
+
+  issue_date date,
+
+  expiry_date date,
+
+  retention text,
+
+  version text,
+
+  notes text,
+
+  file_path text,
+
+  file_name text,
+
+  file_type text,
+
+  file_size bigint,
+
+  created_at timestamptz
+    not null default now(),
+
+  updated_at timestamptz
+    not null default now()
+
 );
 
-alter table public.documents enable row level security;
 
-drop policy if exists "Users can view own documents" on public.documents;
-create policy "Users can view own documents" on public.documents for select using (auth.uid()=user_id);
-drop policy if exists "Users can insert own documents" on public.documents;
-create policy "Users can insert own documents" on public.documents for insert with check (auth.uid()=user_id);
-drop policy if exists "Users can update own documents" on public.documents;
-create policy "Users can update own documents" on public.documents for update using (auth.uid()=user_id);
-drop policy if exists "Users can delete own documents" on public.documents;
-create policy "Users can delete own documents" on public.documents for delete using (auth.uid()=user_id);
 
-insert into storage.buckets (id,name,public)
-values ('operational-documents','operational-documents',false)
-on conflict (id) do nothing;
+alter table public.documents
+enable row level security;
 
-drop policy if exists "Users can view own files" on storage.objects;
-create policy "Users can view own files" on storage.objects for select
-using (bucket_id='operational-documents' and (storage.foldername(name))[1]=auth.uid()::text);
 
-drop policy if exists "Users can upload own files" on storage.objects;
-create policy "Users can upload own files" on storage.objects for insert
-with check (bucket_id='operational-documents' and (storage.foldername(name))[1]=auth.uid()::text);
 
-drop policy if exists "Users can update own files" on storage.objects;
-create policy "Users can update own files" on storage.objects for update
-using (bucket_id='operational-documents' and (storage.foldername(name))[1]=auth.uid()::text);
+drop policy if exists
+"Users can view own documents"
+on public.documents;
 
-drop policy if exists "Users can delete own files" on storage.objects;
-create policy "Users can delete own files" on storage.objects for delete
-using (bucket_id='operational-documents' and (storage.foldername(name))[1]=auth.uid()::text);
+
+create policy
+"Users can view own documents"
+
+on public.documents
+
+for select
+
+using (
+  auth.uid() = user_id
+);
+
+
+
+drop policy if exists
+"Users can insert own documents"
+on public.documents;
+
+
+create policy
+"Users can insert own documents"
+
+on public.documents
+
+for insert
+
+with check (
+  auth.uid() = user_id
+);
+
+
+
+drop policy if exists
+"Users can update own documents"
+on public.documents;
+
+
+create policy
+"Users can update own documents"
+
+on public.documents
+
+for update
+
+using (
+  auth.uid() = user_id
+)
+
+with check (
+  auth.uid() = user_id
+);
+
+
+
+drop policy if exists
+"Users can delete own documents"
+on public.documents;
+
+
+create policy
+"Users can delete own documents"
+
+on public.documents
+
+for delete
+
+using (
+  auth.uid() = user_id
+);
+
+
+
+insert into storage.buckets
+(
+  id,
+  name,
+  public
+)
+
+values
+(
+  'operational-documents',
+  'operational-documents',
+  false
+)
+
+on conflict (id)
+
+do update set
+public = false;
+
+
+
+drop policy if exists
+"Users can view own operational files"
+on storage.objects;
+
+
+create policy
+"Users can view own operational files"
+
+on storage.objects
+
+for select
+
+using (
+
+  bucket_id =
+  'operational-documents'
+
+  and
+
+  (storage.foldername(name))[1]
+  =
+  auth.uid()::text
+
+);
+
+
+
+drop policy if exists
+"Users can upload own operational files"
+on storage.objects;
+
+
+create policy
+"Users can upload own operational files"
+
+on storage.objects
+
+for insert
+
+with check (
+
+  bucket_id =
+  'operational-documents'
+
+  and
+
+  (storage.foldername(name))[1]
+  =
+  auth.uid()::text
+
+);
+
+
+
+drop policy if exists
+"Users can update own operational files"
+on storage.objects;
+
+
+create policy
+"Users can update own operational files"
+
+on storage.objects
+
+for update
+
+using (
+
+  bucket_id =
+  'operational-documents'
+
+  and
+
+  (storage.foldername(name))[1]
+  =
+  auth.uid()::text
+
+)
+
+with check (
+
+  bucket_id =
+  'operational-documents'
+
+  and
+
+  (storage.foldername(name))[1]
+  =
+  auth.uid()::text
+
+);
+
+
+
+drop policy if exists
+"Users can delete own operational files"
+on storage.objects;
+
+
+create policy
+"Users can delete own operational files"
+
+on storage.objects
+
+for delete
+
+using (
+
+  bucket_id =
+  'operational-documents'
+
+  and
+
+  (storage.foldername(name))[1]
+  =
+  auth.uid()::text
+
+);
+
 `;
 
-const CATEGORIES=[
-["CASA — Certificates & licences","ReOC, RePL, ARN, operator accreditation, AROC and other licences","Keep current"],
-["CASA — RPA registration","Drone registration, identification marks and registration certificates","Keep current / link to aircraft"],
-["CASA — Approvals & permissions","Controlled airspace, night, EVLOS/BVLOS, people, area approvals","Expiry-controlled"],
-["Operations Manual & SOPs","Operations Manual, SOPs, emergency procedures and checklists","Controlled revision"],
-["Safety Management / Risk","SMS, hazard register, risk assessments, JSA and corrective actions","Record + review"],
-["Operational releases","Flight/job releases, airspace checks and operation authorisations","Retain with operation"],
-["Operational logs","Flight/operation logs, locations, height, serviceability and deviations","Retain operational record"],
-["Remote pilot records","Pilot logbook, currency, competency and type endorsements","Keep current + historical"],
-["Training & competency","Induction, competency checks, crew/observer training","Record + expiry/review"],
-["Aircraft technical records","Technical logs, total time, defects and component records","Aircraft history"],
-["Maintenance","Inspection, repair, defect rectification, parts, batteries and props","Aircraft history"],
-["Insurance","Public liability, aviation/drone liability, PI and workers compensation","Expiry-controlled"],
-["Incidents & occurrences","Incident reports, investigations and corrective actions","Retain as required"],
-["Aircraft & equipment","Aircraft manuals, serials, firmware, controllers and payloads","Asset life"],
-["Business & legal","ABN/ASIC, contracts, terms, privacy and subcontractor documents","Legal retention"],
-["Client / site permissions","Landowner permission, site access and client approvals","Keep with job"],
-["Emergency & contacts","Emergency response plan, emergency contacts and procedures","Current controlled copy"],
-["Other","Other operational documents","Set retention manually"]
+
+
+/* ================================================================
+   CATEGORIES
+================================================================ */
+
+const CATEGORIES = [
+
+[
+  "CASA — Certificates & licences",
+  "ReOC, RePL, ARN, operator accreditation and other licences",
+  "Keep current"
+],
+
+[
+  "CASA — RPA registration",
+  "Drone registration, identification marks and registration certificates",
+  "Keep current / link to aircraft"
+],
+
+[
+  "CASA — Approvals & permissions",
+  "Controlled airspace, night, EVLOS/BVLOS and other approvals",
+  "Expiry-controlled"
+],
+
+[
+  "Operations Manual & SOPs",
+  "Operations Manual, SOPs, emergency procedures and checklists",
+  "Controlled revision"
+],
+
+[
+  "Safety Management / Risk",
+  "SMS, hazard register, risk assessments, JSA and corrective actions",
+  "Record + review"
+],
+
+[
+  "Operational releases",
+  "Flight/job releases, airspace checks and operation authorisations",
+  "Retain with operation"
+],
+
+[
+  "Operational logs",
+  "Flight/operation logs, locations, height, serviceability and deviations",
+  "Retain operational record"
+],
+
+[
+  "Remote pilot records",
+  "Pilot logbook, currency, competency and type records",
+  "Keep current + historical"
+],
+
+[
+  "Training & competency",
+  "Induction, competency checks, crew/observer training",
+  "Record + review"
+],
+
+[
+  "Aircraft technical records",
+  "Technical logs, total time, defects and component records",
+  "Aircraft history"
+],
+
+[
+  "Maintenance",
+  "Inspection, repair, defect rectification, parts, batteries and props",
+  "Aircraft history"
+],
+
+[
+  "Insurance",
+  "Public liability, aviation/drone liability, PI and workers compensation",
+  "Expiry-controlled"
+],
+
+[
+  "Incidents & occurrences",
+  "Incident reports, investigations and corrective actions",
+  "Retain as required"
+],
+
+[
+  "Aircraft & equipment",
+  "Aircraft manuals, serials, firmware, controllers and payloads",
+  "Asset life"
+],
+
+[
+  "Business & legal",
+  "ABN/ASIC, contracts, terms, privacy and subcontractor documents",
+  "Legal retention"
+],
+
+[
+  "Client / site permissions",
+  "Landowner permission, site access and client approvals",
+  "Keep with job"
+],
+
+[
+  "Emergency & contacts",
+  "Emergency response plan, emergency contacts and procedures",
+  "Current controlled copy"
+],
+
+[
+  "Other",
+  "Other operational documents",
+  "Set retention manually"
+]
+
 ];
 
-let supabase=null, docs=[], editId=null, authMode="signin";
 
-function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
-function status(exp){if(!exp)return"nodate";let days=Math.ceil((new Date(exp+"T23:59:59")-new Date())/86400000);return days<0?"expired":days<=30?"soon":"current"}
-function badge(s){return s==="expired"?'<span class="badge expired">Expired</span>':s==="soon"?'<span class="badge soon">Expiring soon</span>':s==="current"?'<span class="badge ok">Current</span>':'<span class="badge neutral">No expiry</span>'}
 
-function showAuth(mode){authMode=mode;document.getElementById("authButton").textContent=mode==="signin"?"Sign in":"Create account";document.getElementById("authMsg").textContent="";}
+/* ================================================================
+   APPLICATION STATE
+================================================================ */
 
-async function start(){
- if(CONFIG.SUPABASE_URL.includes("PASTE_"))return;
- supabase=window.supabase.createClient(CONFIG.SUPABASE_URL,CONFIG.SUPABASE_KEY);
- const {data:{session}}=await supabase.auth.getSession();
- if(session) showApp();
- supabase.auth.onAuthStateChange((_e,s)=>s?showApp():showLogin());
+let supabase = null;
+
+let docs = [];
+
+let editId = null;
+
+let authMode = "signin";
+
+
+
+/* ================================================================
+   HELPERS
+================================================================ */
+
+function esc(value){
+
+  return String(value ?? "")
+    .replace(/[&<>"']/g, m => ({
+
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+
+    }[m]));
+
 }
-async function showApp(){document.getElementById("loginScreen").style.display="none";document.getElementById("app").style.display="block";document.getElementById("headerActions").innerHTML='<button class="secondary" onclick="signOut()">Sign out</button><button class="secondary" onclick="showSQL()">Setup SQL</button>';fillCategories();renderRecommendations();await loadDocs();}
-function showLogin(){document.getElementById("loginScreen").style.display="block";document.getElementById("app").style.display="none";document.getElementById("headerActions").innerHTML="";}
-async function signOut(){await supabase.auth.signOut()}
 
-document.getElementById("authForm").onsubmit=async e=>{
- e.preventDefault();if(!supabase){document.getElementById("authMsg").textContent="Add your Supabase URL and publishable/anon key to CONFIG first.";return}
- const email=document.getElementById("email").value,password=document.getElementById("password").value;
- let r=authMode==="signin"?await supabase.auth.signInWithPassword({email,password}):await supabase.auth.signUp({email,password});
- document.getElementById("authMsg").textContent=r.error?r.error.message:(authMode==="signin"?"Signed in.":"Account created. Check your email if confirmation is enabled.");
-};
+
+
+function status(expiry){
+
+  if(!expiry)
+    return "nodate";
+
+  const days =
+    Math.ceil(
+      (
+        new Date(expiry + "T23:59:59")
+        -
+        new Date()
+      )
+      /
+      86400000
+    );
+
+  if(days < 0)
+    return "expired";
+
+  if(days <= 30)
+    return "soon";
+
+  return "current";
+}
+
+
+
+function badge(s){
+
+  if(s === "expired")
+    return '<span class="badge expired">Expired</span>';
+
+  if(s === "soon")
+    return '<span class="badge soon">Expiring soon</span>';
+
+  if(s === "current")
+    return '<span class="badge ok">Current</span>';
+
+  return '<span class="badge neutral">No expiry</span>';
+
+}
+
+
+
+function setAuthMessage(text,type=""){
+
+  const el =
+    document.getElementById("authMsg");
+
+  el.textContent = text;
+
+  el.className =
+    "help " + type;
+
+}
+
+
+
+/* ================================================================
+   AUTH UI
+================================================================ */
+
+function showAuth(mode){
+
+  authMode = mode;
+
+  document.getElementById("authButton")
+    .textContent =
+      mode === "signin"
+      ? "Sign in"
+      : "Create account";
+
+  document.getElementById("password")
+    .autocomplete =
+      mode === "signin"
+      ? "current-password"
+      : "new-password";
+
+  document.getElementById("signInTab")
+    .className =
+      mode === "signin"
+      ? ""
+      : "secondary";
+
+  document.getElementById("signUpTab")
+    .className =
+      mode === "signup"
+      ? ""
+      : "secondary";
+
+  setAuthMessage("");
+
+}
+
+
+
+function showLogin(){
+
+  document.getElementById("loginScreen")
+    .style.display = "block";
+
+  document.getElementById("app")
+    .style.display = "none";
+
+  document.getElementById("headerActions")
+    .innerHTML = "";
+
+}
+
+
+
+async function showApp(){
+
+  document.getElementById("loginScreen")
+    .style.display = "none";
+
+  document.getElementById("app")
+    .style.display = "block";
+
+  document.getElementById("headerActions")
+    .innerHTML = `
+
+      <button
+        class="secondary"
+        onclick="showSetup()">
+        Setup SQL
+      </button>
+
+      <button
+        class="secondary"
+        onclick="signOut()">
+        Sign out
+      </button>
+
+    `;
+
+  fillCategories();
+
+  renderRecommendations();
+
+  await loadDocs();
+
+}
+
+
+
+/* ================================================================
+   INITIALISE SUPABASE
+================================================================ */
+
+async function init(){
+
+  const connection =
+    document.getElementById("connectionStatus");
+
+  if(
+    !CONFIG.SUPABASE_URL ||
+    !CONFIG.SUPABASE_KEY
+  ){
+
+    connection.textContent =
+      "Supabase configuration missing.";
+
+    return;
+
+  }
+
+
+  try{
+
+    supabase =
+      window.supabase.createClient(
+
+        CONFIG.SUPABASE_URL,
+
+        CONFIG.SUPABASE_KEY,
+
+        {
+
+          auth:{
+
+            persistSession:true,
+
+            autoRefreshToken:true,
+
+            detectSessionInUrl:true
+
+          }
+
+        }
+
+      );
+
+
+    connection.textContent =
+      "Supabase configured";
+
+
+    const {
+      data:{session}
+    } =
+      await supabase.auth.getSession();
+
+
+    if(session){
+
+      await showApp();
+
+    }else{
+
+      showLogin();
+
+    }
+
+
+    supabase.auth.onAuthStateChange(
+      async (event,session)=>{
+
+        if(session){
+
+          await showApp();
+
+        }else if(
+          event === "SIGNED_OUT"
+        ){
+
+          showLogin();
+
+        }
+
+      }
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+    connection.textContent =
+      "Connection error";
+
+    setAuthMessage(
+      "Supabase could not be initialised: "
+      +
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+
+/* ================================================================
+   AUTHENTICATION
+================================================================ */
+
+document
+.getElementById("authForm")
+.addEventListener(
+  "submit",
+  async event => {
+
+    event.preventDefault();
+
+
+    if(!supabase){
+
+      setAuthMessage(
+        "Supabase is not connected.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    const email =
+      document.getElementById("email")
+      .value
+      .trim();
+
+
+    const password =
+      document.getElementById("password")
+      .value;
+
+
+    const button =
+      document.getElementById("authButton");
+
+
+    button.disabled = true;
+
+    setAuthMessage("Please wait...");
+
+
+    try{
+
+      if(authMode === "signup"){
+
+        const {
+          data,
+          error
+        } =
+        await supabase.auth.signUp({
+
+          email:email,
+
+          password:password,
+
+          options:{
+
+            emailRedirectTo:
+              window.location.href
+              .split("#")[0]
+
+          }
+
+        });
+
+
+        if(error){
+
+          setAuthMessage(
+            "Account creation failed: "
+            + error.message,
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        if(data.session){
+
+          setAuthMessage(
+            "Account created and signed in.",
+            "success"
+          );
+
+          await showApp();
+
+        }else{
+
+          setAuthMessage(
+            "Account created. Check your email for the confirmation link, then sign in.",
+            "success"
+          );
+
+        }
+
+
+      }else{
+
+        const {
+          data,
+          error
+        } =
+        await supabase.auth
+          .signInWithPassword({
+
+            email:email,
+
+            password:password
+
+          });
+
+
+        if(error){
+
+          setAuthMessage(
+            "Sign-in failed: "
+            + error.message,
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        if(data.session){
+
+          await showApp();
+
+        }
+
+      }
+
+
+    }catch(error){
+
+      console.error(error);
+
+      setAuthMessage(
+        "Unexpected error: "
+        + error.message,
+        "error"
+      );
+
+    }finally{
+
+      button.disabled = false;
+
+    }
+
+  }
+);
+
+
+
+/* ================================================================
+   TEST CONNECTION
+================================================================ */
+
+async function testConnection(){
+
+  const el =
+    document.getElementById(
+      "connectionStatus"
+    );
+
+
+  if(!supabase){
+
+    el.textContent =
+      "Supabase is not initialised.";
+
+    return;
+
+  }
+
+
+  el.textContent = "Testing...";
+
+
+  try{
+
+    const {
+      error
+    } =
+    await supabase.auth.getSession();
+
+
+    if(error)
+      throw error;
+
+
+    el.textContent =
+      "Supabase connection OK";
+
+  }catch(error){
+
+    console.error(error);
+
+    el.textContent =
+      "Connection failed: "
+      + error.message;
+
+  }
+
+}
+
+
+
+/* ================================================================
+   DOCUMENTS
+================================================================ */
 
 async function loadDocs(){
- document.getElementById("syncStatus").textContent="Loading…";
- const {data,error}=await supabase.from("documents").select("*").order("expiry_date",{ascending:true,nullsFirst:false});
- if(error){document.getElementById("syncStatus").textContent=error.message;return}
- docs=data||[];document.getElementById("syncStatus").textContent="Cloud connected";render();
+
+  if(!supabase)
+    return;
+
+
+  document.getElementById(
+    "syncStatus"
+  ).textContent = "Loading...";
+
+
+  const {
+    data,
+    error
+  } =
+  await supabase
+    .from("documents")
+    .select("*")
+    .order(
+      "expiry_date",
+      {
+        ascending:true,
+        nullsFirst:false
+      }
+    );
+
+
+  if(error){
+
+    document.getElementById(
+      "syncStatus"
+    ).textContent =
+      error.message;
+
+    console.error(error);
+
+    render();
+
+    return;
+
+  }
+
+
+  docs = data || [];
+
+
+  document.getElementById(
+    "syncStatus"
+  ).textContent =
+    "Cloud connected";
+
+
+  render();
+
 }
+
+
+
 function fillCategories(){
- const o=CATEGORIES.map(x=>`<option>${esc(x[0])}</option>`).join("");
- document.getElementById("dCategory").innerHTML=o;document.getElementById("catFilter").innerHTML='<option value="">All categories</option>'+o;
+
+  const options =
+    CATEGORIES
+      .map(
+        category =>
+          `<option value="${esc(category[0])}">
+            ${esc(category[0])}
+          </option>`
+      )
+      .join("");
+
+
+  document.getElementById(
+    "dCategory"
+  ).innerHTML =
+    options;
+
+
+  document.getElementById(
+    "catFilter"
+  ).innerHTML =
+    '<option value="">All categories</option>'
+    +
+    options;
+
 }
-function renderRecommendations(){document.getElementById("recommendations").innerHTML=CATEGORIES.map(x=>`<tr><td><b>${esc(x[0])}</b></td><td>${esc(x[1])}</td><td>${esc(x[2])}</td></tr>`).join("")}
+
+
+
+function renderRecommendations(){
+
+  document.getElementById(
+    "recommendations"
+  ).innerHTML =
+
+    CATEGORIES
+      .map(category => `
+
+        <tr>
+
+          <td>
+            <b>
+              ${esc(category[0])}
+            </b>
+          </td>
+
+          <td>
+            ${esc(category[1])}
+          </td>
+
+          <td>
+            ${esc(category[2])}
+          </td>
+
+        </tr>
+
+      `)
+      .join("");
+
+}
+
+
+
 function render(){
- const q=document.getElementById("search").value.toLowerCase(),cf=document.getElementById("catFilter").value,sf=document.getElementById("statusFilter").value;
- const a=docs.filter(x=>(!q||[x.name,x.category,x.reference_no,x.asset,x.notes,x.file_name].join(" ").toLowerCase().includes(q))&&(!cf||x.category===cf)&&(!sf||status(x.expiry_date)===sf));
- document.getElementById("mTotal").textContent=docs.length;document.getElementById("mCurrent").textContent=docs.filter(x=>status(x.expiry_date)==="current").length;document.getElementById("mSoon").textContent=docs.filter(x=>status(x.expiry_date)==="soon").length;document.getElementById("mExpired").textContent=docs.filter(x=>status(x.expiry_date)==="expired").length;
- document.getElementById("rows").innerHTML=a.length?a.map(x=>`<tr><td><b>${esc(x.name)}</b><br><span class="help">${esc(x.reference_no||"")}${x.asset?" · "+esc(x.asset):""}</span></td><td>${esc(x.category)}</td><td>${x.expiry_date?new Date(x.expiry_date+"T00:00:00").toLocaleDateString("en-AU"):"—"}<br>${badge(status(x.expiry_date))}</td><td>${esc(x.retention||"—")}</td><td>${x.file_name?esc(x.file_name):'<span class="help">No file</span>'}</td><td><div style="display:flex;gap:5px;flex-wrap:wrap">${x.file_path?`<button onclick="openFile('${x.id}')">Open</button>`:""}<button class="secondary" onclick="editDoc('${x.id}')">Edit</button><button class="danger" onclick="deleteDoc('${x.id}')">Delete</button></div></td></tr>`).join(""):'<tr><td colspan="6" class="empty">No documents found.</td></tr>';
-}
-function openModal(id=null){editId=id;document.getElementById("docForm").reset();document.getElementById("modalTitle").textContent=id?"Edit document":"Add document";if(id){let x=docs.find(y=>y.id===id);document.getElementById("dName").value=x.name;document.getElementById("dCategory").value=x.category;document.getElementById("dRef").value=x.reference_no||"";document.getElementById("dAsset").value=x.asset||"";document.getElementById("dIssue").value=x.issue_date||"";document.getElementById("dExpiry").value=x.expiry_date||"";document.getElementById("dRetention").value=x.retention||"No specific retention entered";document.getElementById("dVersion").value=x.version||"";document.getElementById("dNotes").value=x.notes||""}document.getElementById("modal").classList.add("open")}
-function closeModal(){document.getElementById("modal").classList.remove("open");editId=null}
 
-document.getElementById("docForm").onsubmit=async e=>{
- e.preventDefault();const {data:{user}}=await supabase.auth.getUser();if(!user)return;
- let old=editId?docs.find(x=>x.id===editId):null,id=editId||crypto.randomUUID(),file=document.getElementById("dFile").files[0],path=old?.file_path||null;
- document.getElementById("syncStatus").textContent="Saving…";
- if(file){
-   path=user.id+"/"+id+"/"+file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
-   const {error}=await supabase.storage.from("operational-documents").upload(path,file,{upsert:true,contentType:file.type||"application/octet-stream"});
-   if(error){alert("File upload failed: "+error.message);return}
- }
- const row={id,user_id:user.id,name:dName.value,category:dCategory.value,reference_no:dRef.value||null,asset:dAsset.value||null,issue_date:dIssue.value||null,expiry_date:dExpiry.value||null,retention:dRetention.value,version:dVersion.value||null,notes:dNotes.value||null,file_path:path,file_name:file?.name||old?.file_name||null,file_type:file?.type||old?.file_type||null,file_size:file?.size||old?.file_size||null,updated_at:new Date().toISOString()};
- const r=editId?await supabase.from("documents").update(row).eq("id",id):await supabase.from("documents").insert(row);
- if(r.error){alert("Could not save: "+r.error.message);return}
- closeModal();await loadDocs();
-};
+  const search =
+    document.getElementById(
+      "search"
+    )
+    .value
+    .toLowerCase();
+
+
+  const category =
+    document.getElementById(
+      "catFilter"
+    )
+    .value;
+
+
+  const filterStatus =
+    document.getElementById(
+      "statusFilter"
+    )
+    .value;
+
+
+  const filtered =
+    docs.filter(document => {
+
+      const searchable = [
+
+        document.name,
+
+        document.category,
+
+        document.reference_no,
+
+        document.asset,
+
+        document.notes,
+
+        document.file_name
+
+      ]
+      .join(" ")
+      .toLowerCase();
+
+
+      return (
+
+        !search ||
+        searchable.includes(search)
+
+      )
+      &&
+      (
+
+        !category ||
+        document.category === category
+
+      )
+      &&
+      (
+
+        !filterStatus ||
+        status(document.expiry_date)
+        ===
+        filterStatus
+
+      );
+
+    });
+
+
+  document.getElementById(
+    "mTotal"
+  ).textContent =
+    docs.length;
+
+
+  document.getElementById(
+    "mCurrent"
+  ).textContent =
+    docs.filter(
+      d => status(d.expiry_date)
+      === "current"
+    ).length;
+
+
+  document.getElementById(
+    "mSoon"
+  ).textContent =
+    docs.filter(
+      d => status(d.expiry_date)
+      === "soon"
+    ).length;
+
+
+  document.getElementById(
+    "mExpired"
+  ).textContent =
+    docs.filter(
+      d => status(d.expiry_date)
+      === "expired"
+    ).length;
+
+
+  if(!filtered.length){
+
+    document.getElementById(
+      "rows"
+    ).innerHTML = `
+
+      <tr>
+
+        <td
+          colspan="6"
+          class="empty">
+
+          No documents found.
+
+        </td>
+
+      </tr>
+
+    `;
+
+    return;
+
+  }
+
+
+  document.getElementById(
+    "rows"
+  ).innerHTML =
+
+    filtered
+      .map(document => `
+
+        <tr>
+
+          <td>
+
+            <b>
+              ${esc(document.name)}
+            </b>
+
+            <br>
+
+            <span class="help">
+
+              ${esc(
+                document.reference_no || ""
+              )}
+
+              ${
+                document.asset
+                ?
+                " · " +
+                esc(document.asset)
+                :
+                ""
+              }
+
+            </span>
+
+          </td>
+
+
+          <td>
+            ${esc(document.category)}
+          </td>
+
+
+          <td>
+
+            ${
+              document.expiry_date
+              ?
+              new Date(
+                document.expiry_date
+                + "T00:00:00"
+              )
+              .toLocaleDateString(
+                "en-AU"
+              )
+              :
+              "—"
+            }
+
+            <br>
+
+            ${badge(
+              status(
+                document.expiry_date
+              )
+            )}
+
+          </td>
+
+
+          <td>
+            ${esc(
+              document.retention || "—"
+            )}
+          </td>
+
+
+          <td>
+
+            ${
+              document.file_name
+              ?
+              esc(document.file_name)
+              :
+              '<span class="help">No file</span>'
+            }
+
+          </td>
+
+
+          <td>
+
+            <div
+              style="
+                display:flex;
+                gap:5px;
+                flex-wrap:wrap
+              ">
+
+              ${
+                document.file_path
+                ?
+                `<button
+                  onclick="openFile('${document.id}')">
+                  Open
+                </button>`
+                :
+                ""
+              }
+
+
+              <button
+                class="secondary"
+                onclick="editDoc('${document.id}')">
+
+                Edit
+
+              </button>
+
+
+              <button
+                class="danger"
+                onclick="deleteDoc('${document.id}')">
+
+                Delete
+
+              </button>
+
+            </div>
+
+          </td>
+
+        </tr>
+
+      `)
+      .join("");
+
+}
+
+
+
+/* ================================================================
+   DOCUMENT MODAL
+================================================================ */
+
+function openModal(id=null){
+
+  editId = id;
+
+
+  document.getElementById(
+    "docForm"
+  ).reset();
+
+
+  document.getElementById(
+    "modalTitle"
+  ).textContent =
+    id
+    ?
+    "Edit document"
+    :
+    "Add document";
+
+
+  if(id){
+
+    const document =
+      docs.find(
+        d => d.id === id
+      );
+
+
+    if(!document)
+      return;
+
+
+    document.getElementById(
+      "dName"
+    ).value =
+      document.name || "";
+
+
+    document.getElementById(
+      "dCategory"
+    ).value =
+      document.category || "";
+
+
+    document.getElementById(
+      "dRef"
+    ).value =
+      document.reference_no || "";
+
+
+    document.getElementById(
+      "dAsset"
+    ).value =
+      document.asset || "";
+
+
+    document.getElementById(
+      "dIssue"
+    ).value =
+      document.issue_date || "";
+
+
+    document.getElementById(
+      "dExpiry"
+    ).value =
+      document.expiry_date || "";
+
+
+    document.getElementById(
+      "dRetention"
+    ).value =
+      document.retention ||
+      "No specific retention entered";
+
+
+    document.getElementById(
+      "dVersion"
+    ).value =
+      document.version || "";
+
+
+    document.getElementById(
+      "dNotes"
+    ).value =
+      document.notes || "";
+
+  }
+
+
+  document.getElementById(
+    "modal"
+  ).classList.add("open");
+
+}
+
+
+
+function closeModal(){
+
+  document.getElementById(
+    "modal"
+  ).classList.remove("open");
+
+  editId = null;
+
+}
+
+
+
+function editDoc(id){
+
+  openModal(id);
+
+}
+
+
+
+/* ================================================================
+   SAVE DOCUMENT
+================================================================ */
+
+document
+.getElementById("docForm")
+.addEventListener(
+  "submit",
+  async event => {
+
+    event.preventDefault();
+
+
+    if(!supabase){
+
+      alert(
+        "Supabase is not connected."
+      );
+
+      return;
+
+    }
+
+
+    const {
+      data:{user}
+    } =
+    await supabase.auth.getUser();
+
+
+    if(!user){
+
+      alert(
+        "Your session has expired. Please sign in again."
+      );
+
+      return;
+
+    }
+
+
+    const old =
+      editId
+      ?
+      docs.find(
+        d => d.id === editId
+      )
+      :
+      null;
+
+
+    const id =
+      editId ||
+      crypto.randomUUID();
+
+
+    const file =
+      document.getElementById(
+        "dFile"
+      ).files[0];
+
+
+    let filePath =
+      old?.file_path || null;
+
+
+    const saveButton =
+      document.getElementById(
+        "saveButton"
+      );
+
+
+    saveButton.disabled = true;
+
+
+    document.getElementById(
+      "syncStatus"
+    ).textContent =
+      "Saving...";
+
+
+    try{
+
+
+      /* FILE UPLOAD */
+
+      if(file){
+
+        const safeName =
+          file.name
+            .replace(
+              /[^a-zA-Z0-9._-]/g,
+              "_"
+            );
+
+
+        filePath =
+          user.id
+          + "/"
+          + id
+          + "/"
+          + safeName;
+
+
+        const {
+          error
+        } =
+        await supabase.storage
+          .from(
+            "operational-documents"
+          )
+          .upload(
+
+            filePath,
+
+            file,
+
+            {
+              upsert:true,
+
+              contentType:
+                file.type ||
+                "application/octet-stream"
+
+            }
+
+          );
+
+
+        if(error)
+          throw new Error(
+            "File upload failed: "
+            + error.message
+          );
+
+      }
+
+
+      /* DATABASE RECORD */
+
+      const row = {
+
+        id:id,
+
+        user_id:user.id,
+
+        name:
+          document.getElementById(
+            "dName"
+          ).value.trim(),
+
+        category:
+          document.getElementById(
+            "dCategory"
+          ).value,
+
+        reference_no:
+          document.getElementById(
+            "dRef"
+          ).value.trim()
+          || null,
+
+        asset:
+          document.getElementById(
+            "dAsset"
+          ).value.trim()
+          || null,
+
+        issue_date:
+          document.getElementById(
+            "dIssue"
+          ).value
+          || null,
+
+        expiry_date:
+          document.getElementById(
+            "dExpiry"
+          ).value
+          || null,
+
+        retention:
+          document.getElementById(
+            "dRetention"
+          ).value,
+
+        version:
+          document.getElementById(
+            "dVersion"
+          ).value.trim()
+          || null,
+
+        notes:
+          document.getElementById(
+            "dNotes"
+          ).value.trim()
+          || null,
+
+        file_path:
+          filePath,
+
+        file_name:
+          file
+          ?
+          file.name
+          :
+          old?.file_name || null,
+
+        file_type:
+          file
+          ?
+          file.type
+          :
+          old?.file_type || null,
+
+        file_size:
+          file
+          ?
+          file.size
+          :
+          old?.file_size || null,
+
+        updated_at:
+          new Date().toISOString()
+
+      };
+
+
+      let result;
+
+
+      if(editId){
+
+        result =
+          await supabase
+            .from("documents")
+            .update(row)
+            .eq("id",id);
+
+      }else{
+
+        result =
+          await supabase
+            .from("documents")
+            .insert(row);
+
+      }
+
+
+      if(result.error)
+        throw new Error(
+          "Could not save record: "
+          + result.error.message
+        );
+
+
+      closeModal();
+
+      await loadDocs();
+
+
+    }catch(error){
+
+      console.error(error);
+
+      alert(error.message);
+
+      document.getElementById(
+        "syncStatus"
+      ).textContent =
+        "Save failed";
+
+    }finally{
+
+      saveButton.disabled = false;
+
+    }
+
+  }
+);
+
+
+
+/* ================================================================
+   OPEN PRIVATE FILE
+================================================================ */
+
 async function openFile(id){
- const x=docs.find(y=>y.id===id);if(!x?.file_path)return;
- const {data,error}=await supabase.storage.from("operational-documents").createSignedUrl(x.file_path,300);
- if(error){alert(error.message);return}window.open(data.signedUrl,"_blank","noopener");
-}
-async function deleteDoc(id){
- if(!confirm("Delete this document and its cloud file?"))return;
- const x=docs.find(y=>y.id===id);
- if(x?.file_path)await supabase.storage.from("operational-documents").remove([x.file_path]);
- const r=await supabase.from("documents").delete().eq("id",id);if(r.error)alert(r.error.message);else await loadDocs();
-}
-function editDoc(id){openModal(id)}
-function showSQL(){prompt("Copy this SQL into Supabase SQL Editor:",SETUP_SQL)}
 
-start();
+  const document =
+    docs.find(
+      d => d.id === id
+    );
+
+
+  if(
+    !document ||
+    !document.file_path
+  )
+    return;
+
+
+  const {
+    data,
+    error
+  } =
+  await supabase.storage
+    .from(
+      "operational-documents"
+    )
+    .createSignedUrl(
+      document.file_path,
+      300
+    );
+
+
+  if(error){
+
+    alert(error.message);
+
+    return;
+
+  }
+
+
+  window.open(
+    data.signedUrl,
+    "_blank",
+    "noopener"
+  );
+
+}
+
+
+
+/* ================================================================
+   DELETE
+================================================================ */
+
+async function deleteDoc(id){
+
+  if(
+    !confirm(
+      "Delete this document and its cloud file?"
+    )
+  )
+    return;
+
+
+  const document =
+    docs.find(
+      d => d.id === id
+    );
+
+
+  try{
+
+
+    if(document?.file_path){
+
+      const {
+        error
+      } =
+      await supabase.storage
+        .from(
+          "operational-documents"
+        )
+        .remove([
+          document.file_path
+        ]);
+
+
+      if(error)
+        console.warn(
+          "Storage deletion:",
+          error.message
+        );
+
+    }
+
+
+    const {
+      error
+    } =
+    await supabase
+      .from("documents")
+      .delete()
+      .eq("id",id);
+
+
+    if(error)
+      throw error;
+
+
+    await loadDocs();
+
+
+  }catch(error){
+
+    alert(
+      "Delete failed: "
+      + error.message
+    );
+
+  }
+
+}
+
+
+
+/* ================================================================
+   SQL SETUP UI
+================================================================ */
+
+function showSetup(){
+
+  document.getElementById(
+    "sqlBox"
+  ).value =
+    SETUP_SQL;
+
+  document.getElementById(
+    "setupModal"
+  ).classList.add("open");
+
+}
+
+
+
+function closeSetup(){
+
+  document.getElementById(
+    "setupModal"
+  ).classList.remove("open");
+
+}
+
+
+
+async function copySQL(){
+
+  try{
+
+    await navigator.clipboard.writeText(
+      SETUP_SQL
+    );
+
+    alert(
+      "SQL copied to clipboard."
+    );
+
+  }catch(error){
+
+    const box =
+      document.getElementById(
+        "sqlBox"
+      );
+
+    box.select();
+
+    document.execCommand("copy");
+
+    alert(
+      "SQL copied."
+    );
+
+  }
+
+}
+
+
+
+function downloadSQL(){
+
+  const blob =
+    new Blob(
+      [SETUP_SQL],
+      {
+        type:"text/plain"
+      }
+    );
+
+
+  const url =
+    URL.createObjectURL(blob);
+
+
+  const a =
+    document.createElement("a");
+
+
+  a.href = url;
+
+  a.download =
+    "setup.sql";
+
+
+  document.body.appendChild(a);
+
+  a.click();
+
+  a.remove();
+
+  URL.revokeObjectURL(url);
+
+}
+
+
+
+/* ================================================================
+   START
+================================================================ */
+
+init();
+
 </script>
+
 </body>
 </html>
