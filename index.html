@@ -1,2966 +1,2164 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Baw Baw Aerial Services — Operations Hub</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>Baw Baw Aerial Services — Operations Portal</title>
 
 <style>
-:root{
-  --bg:#f4f6f8;
-  --panel:#fff;
-  --ink:#17202a;
-  --muted:#66717d;
-  --line:#dce2e8;
-  --accent:#146ef5;
-  --good:#17834b;
-  --warn:#b66a00;
-  --bad:#c93434
+* {
+    box-sizing: border-box;
 }
 
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--ink);
-  font:14px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f3f5f7;
+    color: #1f2933;
 }
 
-header{
-  background:#111923;
-  color:#fff;
-  padding:17px 24px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  position:sticky;
-  top:0;
-  z-index:10
+header {
+    background: #17212b;
+    color: white;
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-h1{font-size:19px;margin:0}
-h2{margin-top:0}
-header small{color:#b9c4d0}
-
-.container{
-  max-width:1500px;
-  margin:auto;
-  padding:20px
+header h1 {
+    margin: 0;
+    font-size: 20px;
 }
 
-button{
-  border:0;
-  border-radius:8px;
-  padding:9px 13px;
-  background:var(--accent);
-  color:#fff;
-  font-weight:650;
-  cursor:pointer
+header button {
+    background: #dc3545;
+    color: white;
+    border: 0;
+    padding: 9px 14px;
+    border-radius: 6px;
+    cursor: pointer;
 }
 
-button.secondary{
-  background:#edf1f5;
-  color:#263341
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
 }
 
-button.danger{
-  background:#c93434
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
 }
 
-button:disabled{
-  opacity:.55;
-  cursor:not-allowed
+.login {
+    max-width: 430px;
+    margin: 70px auto;
 }
 
-input,select,textarea{
-  width:100%;
-  padding:10px;
-  border:1px solid #ccd4dc;
-  border-radius:8px;
-  background:#fff;
-  color:var(--ink)
+h2 {
+    margin-top: 0;
 }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:13px;
-  margin-bottom:17px
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 11px;
+    margin: 6px 0 14px;
+    border: 1px solid #ccd3da;
+    border-radius: 6px;
+    font-size: 15px;
 }
 
-.card,.panel,.login{
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:13px;
-  box-shadow:0 6px 25px #17202a0d
+textarea {
+    min-height: 90px;
+    resize: vertical;
 }
 
-.card{padding:16px}
-
-.metric{
-  font-size:28px;
-  font-weight:750
+button {
+    border: 0;
+    border-radius: 6px;
+    padding: 11px 16px;
+    cursor: pointer;
+    font-size: 14px;
 }
 
-.label{
-  font-size:11px;
-  text-transform:uppercase;
-  letter-spacing:.06em;
-  color:var(--muted)
+.primary {
+    background: #1769aa;
+    color: white;
 }
 
-.toolbar{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-bottom:13px
+.secondary {
+    background: #e9ecef;
+    color: #222;
 }
 
-.toolbar input{
-  max-width:360px
+.danger {
+    background: #dc3545;
+    color: white;
 }
 
-.toolbar select{
-  width:auto;
-  min-width:180px
+.full {
+    width: 100%;
 }
 
-.panel{
-  overflow:hidden
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
 }
 
-.head{
-  padding:14px 16px;
-  border-bottom:1px solid var(--line);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px
+.tabs button {
+    flex: 1;
 }
 
-.head h2{
-  margin:0;
-  font-size:16px
+.tab-active {
+    background: #1769aa;
+    color: white;
 }
 
-table{
-  width:100%;
-  border-collapse:collapse
+.message {
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 6px;
+    background: #eef2f5;
+    font-size: 14px;
 }
 
-th,td{
-  padding:11px 13px;
-  border-bottom:1px solid var(--line);
-  text-align:left;
-  vertical-align:middle
+.success {
+    background: #d9f5df;
+    color: #155724;
 }
 
-th{
-  background:#f8fafb;
-  color:var(--muted);
-  font-size:11px;
-  text-transform:uppercase
+.error {
+    background: #f8d7da;
+    color: #721c24;
 }
 
-tr:last-child td{
-  border-bottom:0
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
 }
 
-.badge{
-  display:inline-block;
-  padding:3px 8px;
-  border-radius:99px;
-  font-size:11px;
-  font-weight:700
+.metric {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
 }
 
-.ok{
-  background:#e7f6ee;
-  color:var(--good)
+.metric strong {
+    display: block;
+    font-size: 28px;
+    margin-top: 8px;
 }
 
-.soon{
-  background:#fff2dc;
-  color:var(--warn)
+.controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-.expired{
-  background:#fde8e8;
-  color:var(--bad)
+.controls input,
+.controls select {
+    flex: 1;
+    min-width: 180px;
 }
 
-.neutral{
-  background:#edf1f5;
-  color:#536170
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
 }
 
-.notice{
-  padding:11px 13px;
-  background:#fff7e6;
-  border:1px solid #f2d18c;
-  border-radius:9px;
-  margin-bottom:15px;
-  color:#6e4b00
+th,
+td {
+    padding: 11px;
+    border-bottom: 1px solid #e1e5e8;
+    text-align: left;
+    vertical-align: top;
 }
 
-.help{
-  font-size:12px;
-  color:var(--muted)
+th {
+    background: #f5f7f9;
 }
 
-.error{
-  color:var(--bad)
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 12px;
 }
 
-.success{
-  color:var(--good)
+.current {
+    background: #d9f5df;
+    color: #155724;
 }
 
-.login{
-  max-width:520px;
-  margin:8vh auto;
-  padding:25px
+.expiring {
+    background: #fff3cd;
+    color: #856404;
 }
 
-.login h2{
-  margin-top:0
+.expired {
+    background: #f8d7da;
+    color: #721c24;
 }
 
-.tabs{
-  display:flex;
-  gap:6px;
-  margin-bottom:15px
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
 }
 
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:#0a141e99;
-  z-index:50;
-  padding:18px;
-  overflow:auto
+.modal-box {
+    background: white;
+    max-width: 650px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 25px;
+    border-radius: 10px;
 }
 
-.modal.open{
-  display:block
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
 }
 
-.dialog{
-  max-width:820px;
-  margin:4vh auto;
-  background:#fff;
-  border-radius:14px;
-  padding:20px
+.form-grid .full-width {
+    grid-column: 1 / -1;
 }
 
-.formgrid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px
+.hidden {
+    display: none !important;
 }
 
-.full{
-  grid-column:1/-1
+.small {
+    font-size: 12px;
+    color: #66717c;
 }
 
-.actions{
-  display:flex;
-  justify-content:flex-end;
-  gap:8px;
-  margin-top:15px
+@media(max-width: 750px) {
+    .dashboard {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid .full-width {
+        grid-column: auto;
+    }
+
+    table {
+        font-size: 13px;
+    }
 }
 
-#app{
-  display:none
-}
-
-.empty{
-  text-align:center;
-  padding:35px;
-  color:var(--muted)
-}
-
-.setupbox{
-  background:#f7f9fb;
-  border:1px solid var(--line);
-  border-radius:9px;
-  padding:12px;
-  margin-top:12px
-}
-
-.setupbox textarea{
-  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-  font-size:12px;
-  min-height:280px
-}
-
-.smallbuttons{
-  display:flex;
-  gap:7px;
-  flex-wrap:wrap;
-  margin-top:8px
-}
-
-@media(max-width:850px){
-  .grid{
-    grid-template-columns:1fr 1fr
-  }
-
-  .formgrid{
-    grid-template-columns:1fr
-  }
-
-  .full{
-    grid-column:auto
-  }
-}
-
-@media(max-width:600px){
-  header{
-    padding:13px
-  }
-
-  .container{
-    padding:12px
-  }
-
-  .grid{
-    gap:8px
-  }
-
-  .toolbar input{
-    max-width:none
-  }
-
-  .toolbar select{
-    width:100%
-  }
+@media(max-width: 500px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<header>
-
-<div>
-<h1>✈ Baw Baw Aerial Services</h1>
-<small>Cloud Operations & Compliance Hub</small>
-</div>
-
-<div id="headerActions"
-style="display:flex;gap:7px;flex-wrap:wrap">
-</div>
-
-</header>
-
-
 <!-- LOGIN -->
+<div id="loginPage">
 
-<section id="loginScreen" class="login">
+    <div class="card login">
 
-<h2>Operations Hub</h2>
+        <h2>Baw Baw Aerial Services</h2>
 
-<p class="help">
-Cloud-stored operational records and documents for Baw Baw Aerial Services.
-</p>
+        <p class="small">
+            Operations & Compliance Portal
+        </p>
 
-<div class="tabs">
+        <div class="tabs">
 
-<button
-id="signInTab"
-onclick="showAuth('signin')">
-Sign in
-</button>
+            <button
+                id="signInTab"
+                class="tab-active"
+                type="button">
+                Sign in
+            </button>
 
-<button
-id="signUpTab"
-class="secondary"
-onclick="showAuth('signup')">
-Create account
-</button>
+            <button
+                id="signUpTab"
+                class="secondary"
+                type="button">
+                Create account
+            </button>
+
+        </div>
+
+        <!-- SIGN IN -->
+
+        <form id="authForm">
+
+            <label>Email</label>
+
+            <input
+                id="email"
+                type="email"
+                autocomplete="email"
+                required
+                placeholder="you@example.com">
+
+            <label>Password</label>
+
+            <input
+                id="password"
+                type="password"
+                autocomplete="current-password"
+                required
+                placeholder="Password">
+
+            <button
+                id="signInButton"
+                class="primary full"
+                type="submit">
+
+                Sign in
+
+            </button>
+
+        </form>
+
+        <!-- SIGN UP -->
+
+        <form
+            id="signupForm"
+            class="hidden">
+
+            <label>Email</label>
+
+            <input
+                id="signupEmail"
+                type="email"
+                autocomplete="email"
+                required
+                placeholder="you@example.com">
+
+            <label>Password</label>
+
+            <input
+                id="signupPassword"
+                type="password"
+                autocomplete="new-password"
+                minlength="6"
+                required
+                placeholder="At least 6 characters">
+
+            <button
+                class="primary full"
+                type="submit">
+
+                Create account
+
+            </button>
+
+        </form>
+
+        <div
+            id="authMsg"
+            class="message">
+
+            Connecting to secure database...
+
+        </div>
+
+    </div>
 
 </div>
-
-
-<form id="authForm">
-
-<input
-id="email"
-type="email"
-placeholder="Email"
-autocomplete="email"
-required
-style="margin-bottom:9px">
-
-
-<input
-id="password"
-type="password"
-placeholder="Password"
-autocomplete="current-password"
-required
-minlength="6"
-style="margin-bottom:9px">
-
-
-<button
-id="authButton"
-type="submit">
-Sign in
-</button>
-
-</form>
-
-
-<p id="authMsg" class="help"></p>
-
-
-<details style="margin-top:15px">
-
-<summary>Connection / setup</summary>
-
-<div class="setupbox">
-
-<p class="help">
-This application uses Supabase Auth, Postgres and private Storage.
-GitHub Pages hosts the application.
-</p>
-
-<p>
-<b>Connection:</b>
-<span id="connectionStatus">Checking...</span>
-</p>
-
-<div class="smallbuttons">
-
-<button
-type="button"
-class="secondary"
-onclick="testConnection()">
-Test connection
-</button>
-
-<button
-type="button"
-class="secondary"
-onclick="showSetup()">
-Show setup SQL
-</button>
-
-<button
-type="button"
-class="secondary"
-onclick="downloadSQL()">
-Download setup.sql
-</button>
-
-</div>
-
-</div>
-
-</details>
-
-</section>
-
 
 
 <!-- APPLICATION -->
 
-<main id="app" class="container">
+<div
+    id="app"
+    class="hidden">
 
-<div class="notice">
+<header>
 
-<b>Cloud storage:</b>
+    <h1>
+        Baw Baw Aerial Services — Operations Portal
+    </h1>
 
-Documents are stored in a private Supabase Storage bucket and their
-records are stored in Supabase Postgres.
+    <button
+        id="logoutButton"
+        type="button">
 
-GitHub only hosts the application.
+        Sign out
 
-<br>
+    </button>
 
-<span class="help">
-Never put a Supabase service_role or secret key into this HTML.
-</span>
+</header>
+
+<div class="container">
+
+    <div class="dashboard">
+
+        <div class="metric">
+            Total documents
+            <strong id="totalCount">0</strong>
+        </div>
+
+        <div class="metric">
+            Current
+            <strong id="currentCount">0</strong>
+        </div>
+
+        <div class="metric">
+            Expiring ≤30 days
+            <strong id="expiringCount">0</strong>
+        </div>
+
+        <div class="metric">
+            Expired
+            <strong id="expiredCount">0</strong>
+        </div>
+
+    </div>
+
+    <br>
+
+    <div class="card">
+
+        <div class="controls">
+
+            <input
+                id="search"
+                type="search"
+                placeholder="Search documents...">
+
+            <select id="categoryFilter">
+
+                <option value="">All categories</option>
+
+                <option>CASA — Certificates & licences</option>
+                <option>CASA — RPA registration</option>
+                <option>CASA — Approvals & permissions</option>
+                <option>Operations Manual & SOPs</option>
+                <option>Safety Management / Risk</option>
+                <option>Operational releases</option>
+                <option>Operational logs</option>
+                <option>Remote pilot records</option>
+                <option>Training & competency</option>
+                <option>Aircraft technical records</option>
+                <option>Maintenance</option>
+                <option>Insurance</option>
+                <option>Incidents & occurrences</option>
+                <option>Aircraft & equipment</option>
+                <option>Business & legal</option>
+                <option>Client / site permissions</option>
+                <option>Emergency & contacts</option>
+                <option>Other</option>
+
+            </select>
+
+            <button
+                id="refreshButton"
+                class="secondary"
+                type="button">
+
+                Refresh
+
+            </button>
+
+            <button
+                id="addButton"
+                class="primary"
+                type="button">
+
+                + Add document
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>Operational Document Register</h2>
+
+        <div id="loading">
+            Loading documents...
+        </div>
+
+        <div style="overflow-x:auto">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Document</th>
+                        <th>Category</th>
+                        <th>Reference</th>
+                        <th>Expiry / Review</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="documentTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
 
 </div>
 
 
-<!-- DASHBOARD -->
-
-<div class="grid">
-
-<div class="card">
-
-<div class="label">
-Documents
-</div>
+<!-- ADD / EDIT MODAL -->
 
 <div
-class="metric"
-id="mTotal">
-0
-</div>
+    id="documentModal"
+    class="modal">
+
+    <div class="modal-box">
+
+        <h2 id="modalTitle">
+            Add document
+        </h2>
+
+        <form id="documentForm">
+
+            <input
+                type="hidden"
+                id="documentId">
+
+            <div class="form-grid">
+
+                <div class="full-width">
+
+                    <label>Document name *</label>
+
+                    <input
+                        id="docName"
+                        required
+                        placeholder="e.g. Operations Manual">
+
+                </div>
+
+                <div>
+
+                    <label>Category *</label>
+
+                    <select
+                        id="docCategory"
+                        required>
+
+                        <option value="">
+                            Select category
+                        </option>
+
+                        <option>CASA — Certificates & licences</option>
+                        <option>CASA — RPA registration</option>
+                        <option>CASA — Approvals & permissions</option>
+                        <option>Operations Manual & SOPs</option>
+                        <option>Safety Management / Risk</option>
+                        <option>Operational releases</option>
+                        <option>Operational logs</option>
+                        <option>Remote pilot records</option>
+                        <option>Training & competency</option>
+                        <option>Aircraft technical records</option>
+                        <option>Maintenance</option>
+                        <option>Insurance</option>
+                        <option>Incidents & occurrences</option>
+                        <option>Aircraft & equipment</option>
+                        <option>Business & legal</option>
+                        <option>Client / site permissions</option>
+                        <option>Emergency & contacts</option>
+                        <option>Other</option>
+
+                    </select>
+
+                </div>
+
+                <div>
+
+                    <label>Reference number</label>
+
+                    <input id="docReference">
+
+                </div>
+
+                <div>
+
+                    <label>Aircraft / asset</label>
+
+                    <input id="docAsset">
+
+                </div>
+
+                <div>
+
+                    <label>Issue date</label>
+
+                    <input
+                        id="docIssueDate"
+                        type="date">
+
+                </div>
+
+                <div>
+
+                    <label>Expiry / review date</label>
+
+                    <input
+                        id="docExpiryDate"
+                        type="date">
+
+                </div>
+
+                <div>
+
+                    <label>Retention</label>
+
+                    <input
+                        id="docRetention"
+                        placeholder="e.g. 7 years">
+
+                </div>
+
+                <div>
+
+                    <label>Version</label>
+
+                    <input
+                        id="docVersion"
+                        placeholder="e.g. Rev 3">
+
+                </div>
+
+                <div class="full-width">
+
+                    <label>Notes</label>
+
+                    <textarea
+                        id="docNotes"></textarea>
+
+                </div>
+
+                <div class="full-width">
+
+                    <label>File</label>
+
+                    <input
+                        id="docFile"
+                        type="file">
+
+                    <div class="small">
+                        Files are stored privately in Supabase.
+                    </div>
+
+                </div>
+
+            </div>
+
+            <br>
+
+            <div id="fileInfo"></div>
+
+            <br>
+
+            <button
+                class="primary"
+                type="submit">
+
+                Save document
+
+            </button>
+
+            <button
+                id="cancelButton"
+                class="secondary"
+                type="button">
+
+                Cancel
+
+            </button>
+
+        </form>
+
+    </div>
 
 </div>
 
 
-<div class="card">
+<!-- SUPABASE -->
 
-<div class="label">
-Current
-</div>
-
-<div
-class="metric"
-id="mCurrent">
-0
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="label">
-Expiring ≤30 days
-</div>
-
-<div
-class="metric"
-id="mSoon">
-0
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="label">
-Expired
-</div>
-
-<div
-class="metric"
-id="mExpired">
-0
-</div>
-
-</div>
-
-</div>
-
-
-
-<!-- TOOLBAR -->
-
-<div class="toolbar">
-
-<button onclick="openModal()">
-+ Add document
-</button>
-
-<input
-id="search"
-placeholder="Search documents, references, aircraft..."
-oninput="render()">
-
-
-<select
-id="catFilter"
-onchange="render()">
-
-<option value="">
-All categories
-</option>
-
-</select>
-
-
-<select
-id="statusFilter"
-onchange="render()">
-
-<option value="">
-All statuses
-</option>
-
-<option value="current">
-Current
-</option>
-
-<option value="soon">
-Expiring soon
-</option>
-
-<option value="expired">
-Expired
-</option>
-
-<option value="nodate">
-No expiry
-</option>
-
-</select>
-
-
-<button
-class="secondary"
-onclick="loadDocs()">
-↻ Refresh
-</button>
-
-</div>
-
-
-
-<!-- DOCUMENT REGISTER -->
-
-<section class="panel">
-
-<div class="head">
-
-<h2>
-Document register
-</h2>
-
-<span
-class="help"
-id="syncStatus">
-Cloud connected
-</span>
-
-</div>
-
-
-<div style="overflow:auto">
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>
-Document
-</th>
-
-<th>
-Category
-</th>
-
-<th>
-Expiry
-</th>
-
-<th>
-Retention
-</th>
-
-<th>
-File
-</th>
-
-<th>
-Actions
-</th>
-
-</tr>
-
-</thead>
-
-
-<tbody id="rows">
-</tbody>
-
-</table>
-
-</div>
-
-</section>
-
-
-
-<!-- RECOMMENDATIONS -->
-
-<section
-class="panel"
-style="margin-top:17px">
-
-<div class="head">
-
-<h2>
-Operational register
-</h2>
-
-<span class="help">
-Practical master compliance register
-</span>
-
-</div>
-
-
-<div style="overflow:auto">
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>
-Category
-</th>
-
-<th>
-Examples
-</th>
-
-<th>
-Suggested control
-</th>
-
-</tr>
-
-</thead>
-
-
-<tbody id="recommendations">
-</tbody>
-
-</table>
-
-</div>
-
-</section>
-
-</main>
-
-
-
-<!-- ADD DOCUMENT MODAL -->
-
-<div id="modal" class="modal">
-
-<div class="dialog">
-
-<h2 id="modalTitle">
-Add document
-</h2>
-
-
-<form id="docForm">
-
-<div class="formgrid">
-
-
-<div>
-
-<label>
-Document name *
-</label>
-
-<input
-id="dName"
-required
-placeholder="ReOC Certificate">
-
-</div>
-
-
-<div>
-
-<label>
-Category *
-</label>
-
-<select
-id="dCategory"
-required>
-</select>
-
-</div>
-
-
-<div>
-
-<label>
-Reference / document number
-</label>
-
-<input id="dRef">
-
-</div>
-
-
-<div>
-
-<label>
-Aircraft / asset
-</label>
-
-<input
-id="dAsset"
-placeholder="DJI Mavic 3 / aircraft registration">
-
-</div>
-
-
-<div>
-
-<label>
-Issue date
-</label>
-
-<input
-id="dIssue"
-type="date">
-
-</div>
-
-
-<div>
-
-<label>
-Expiry / review date
-</label>
-
-<input
-id="dExpiry"
-type="date">
-
-</div>
-
-
-<div>
-
-<label>
-Retention
-</label>
-
-<select id="dRetention">
-
-<option>
-No specific retention entered
-</option>
-
-<option>
-3 years
-</option>
-
-<option>
-7 years
-</option>
-
-<option>
-7 years after person leaves
-</option>
-
-<option>
-Permanent / current certificate
-</option>
-
-</select>
-
-</div>
-
-
-<div>
-
-<label>
-Version
-</label>
-
-<input
-id="dVersion"
-placeholder="Rev 1.0">
-
-</div>
-
-
-<div class="full">
-
-<label>
-Notes
-</label>
-
-<textarea
-id="dNotes"
-rows="3"
-placeholder="Conditions, applicable operation, renewal requirements, etc.">
-</textarea>
-
-</div>
-
-
-<div class="full">
-
-<label>
-Document file
-</label>
-
-<input
-id="dFile"
-type="file"
-accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.jpg,.jpeg,.png">
-
-<div class="help">
-Upload the actual document to your private cloud storage.
-</div>
-
-</div>
-
-
-</div>
-
-
-<div class="actions">
-
-<button
-type="button"
-class="secondary"
-onclick="closeModal()">
-Cancel
-</button>
-
-<button
-id="saveButton"
-type="submit">
-Save to cloud
-</button>
-
-</div>
-
-</form>
-
-</div>
-
-</div>
-
-
-
-<!-- SETUP SQL MODAL -->
-
-<div id="setupModal" class="modal">
-
-<div class="dialog">
-
-<h2>
-Supabase setup SQL
-</h2>
-
-<p class="help">
-
-Copy everything in the box below into:
-
-<b>
-Supabase → SQL Editor → New query
-</b>
-
-Then click Run.
-
-<br><br>
-
-Only copy the SQL in the box.
-Do not copy this HTML.
-
-</p>
-
-
-<textarea
-id="sqlBox"
-readonly>
-</textarea>
-
-
-<div class="actions">
-
-<button
-class="secondary"
-onclick="copySQL()">
-Copy SQL
-</button>
-
-<button
-class="secondary"
-onclick="downloadSQL()">
-Download .sql
-</button>
-
-<button
-onclick="closeSetup()">
-Close
-</button>
-
-</div>
-
-</div>
-
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 <script>
 
-/* ================================================================
+"use strict";
+
+/* =========================================================
    SUPABASE CONFIGURATION
+   ========================================================= */
 
-   IMPORTANT:
-   Keep the quotation marks around both values.
+const SUPABASE_URL =
+    "https://takjtswcybbvvuftesvl.supabase.co";
 
-   Use your Supabase PUBLISHABLE / ANON key.
+const SUPABASE_KEY =
+    "sb_publishable_MO_FAaZR6ws-g_Stzq9F_Q_BBL0d4pV";
 
-   NEVER use service_role / secret here.
-================================================================ */
+let db = null;
+let currentUser = null;
+let documents = [];
 
-const CONFIG = {
 
-  SUPABASE_URL:
-    "https://takjtswcybbvvuftesvl.supabase.co",
+/* =========================================================
+   ELEMENTS
+   ========================================================= */
 
-  SUPABASE_KEY:
-    "sb_publishable_MO_FAaZR6ws-g_Stzq9F_Q_BBL0d4pV"
+const loginPage =
+    document.getElementById("loginPage");
 
-};
+const app =
+    document.getElementById("app");
 
+const authForm =
+    document.getElementById("authForm");
 
+const signupForm =
+    document.getElementById("signupForm");
 
-/* ================================================================
-   DATABASE SETUP SQL
-
-   This is ONLY for the Supabase SQL Editor.
-================================================================ */
-
-const SETUP_SQL = String.raw`
-
-create table if not exists public.documents (
-
-  id uuid primary key default gen_random_uuid(),
-
-  user_id uuid not null
-    references auth.users(id)
-    on delete cascade,
-
-  name text not null,
-
-  category text not null,
-
-  reference_no text,
-
-  asset text,
-
-  issue_date date,
-
-  expiry_date date,
-
-  retention text,
-
-  version text,
-
-  notes text,
-
-  file_path text,
-
-  file_name text,
-
-  file_type text,
-
-  file_size bigint,
-
-  created_at timestamptz
-    not null default now(),
-
-  updated_at timestamptz
-    not null default now()
-
-);
-
-
-
-alter table public.documents
-enable row level security;
-
-
-
-drop policy if exists
-"Users can view own documents"
-on public.documents;
-
-
-create policy
-"Users can view own documents"
-
-on public.documents
-
-for select
-
-using (
-  auth.uid() = user_id
-);
-
-
-
-drop policy if exists
-"Users can insert own documents"
-on public.documents;
-
-
-create policy
-"Users can insert own documents"
-
-on public.documents
-
-for insert
-
-with check (
-  auth.uid() = user_id
-);
-
-
-
-drop policy if exists
-"Users can update own documents"
-on public.documents;
-
-
-create policy
-"Users can update own documents"
-
-on public.documents
-
-for update
-
-using (
-  auth.uid() = user_id
-)
-
-with check (
-  auth.uid() = user_id
-);
-
-
-
-drop policy if exists
-"Users can delete own documents"
-on public.documents;
-
-
-create policy
-"Users can delete own documents"
-
-on public.documents
-
-for delete
-
-using (
-  auth.uid() = user_id
-);
-
-
-
-insert into storage.buckets
-(
-  id,
-  name,
-  public
-)
-
-values
-(
-  'operational-documents',
-  'operational-documents',
-  false
-)
-
-on conflict (id)
-
-do update set
-public = false;
-
-
-
-drop policy if exists
-"Users can view own operational files"
-on storage.objects;
-
-
-create policy
-"Users can view own operational files"
-
-on storage.objects
-
-for select
-
-using (
-
-  bucket_id =
-  'operational-documents'
-
-  and
-
-  (storage.foldername(name))[1]
-  =
-  auth.uid()::text
-
-);
-
-
-
-drop policy if exists
-"Users can upload own operational files"
-on storage.objects;
-
-
-create policy
-"Users can upload own operational files"
-
-on storage.objects
-
-for insert
-
-with check (
-
-  bucket_id =
-  'operational-documents'
-
-  and
-
-  (storage.foldername(name))[1]
-  =
-  auth.uid()::text
-
-);
-
-
-
-drop policy if exists
-"Users can update own operational files"
-on storage.objects;
-
-
-create policy
-"Users can update own operational files"
-
-on storage.objects
-
-for update
-
-using (
-
-  bucket_id =
-  'operational-documents'
-
-  and
-
-  (storage.foldername(name))[1]
-  =
-  auth.uid()::text
-
-)
-
-with check (
-
-  bucket_id =
-  'operational-documents'
-
-  and
-
-  (storage.foldername(name))[1]
-  =
-  auth.uid()::text
-
-);
-
-
-
-drop policy if exists
-"Users can delete own operational files"
-on storage.objects;
-
-
-create policy
-"Users can delete own operational files"
-
-on storage.objects
-
-for delete
-
-using (
-
-  bucket_id =
-  'operational-documents'
-
-  and
-
-  (storage.foldername(name))[1]
-  =
-  auth.uid()::text
-
-);
-
-`;
-
-
-
-/* ================================================================
-   CATEGORIES
-================================================================ */
-
-const CATEGORIES = [
-
-[
-  "CASA — Certificates & licences",
-  "ReOC, RePL, ARN, operator accreditation and other licences",
-  "Keep current"
-],
-
-[
-  "CASA — RPA registration",
-  "Drone registration, identification marks and registration certificates",
-  "Keep current / link to aircraft"
-],
-
-[
-  "CASA — Approvals & permissions",
-  "Controlled airspace, night, EVLOS/BVLOS and other approvals",
-  "Expiry-controlled"
-],
-
-[
-  "Operations Manual & SOPs",
-  "Operations Manual, SOPs, emergency procedures and checklists",
-  "Controlled revision"
-],
-
-[
-  "Safety Management / Risk",
-  "SMS, hazard register, risk assessments, JSA and corrective actions",
-  "Record + review"
-],
-
-[
-  "Operational releases",
-  "Flight/job releases, airspace checks and operation authorisations",
-  "Retain with operation"
-],
-
-[
-  "Operational logs",
-  "Flight/operation logs, locations, height, serviceability and deviations",
-  "Retain operational record"
-],
-
-[
-  "Remote pilot records",
-  "Pilot logbook, currency, competency and type records",
-  "Keep current + historical"
-],
-
-[
-  "Training & competency",
-  "Induction, competency checks, crew/observer training",
-  "Record + review"
-],
-
-[
-  "Aircraft technical records",
-  "Technical logs, total time, defects and component records",
-  "Aircraft history"
-],
-
-[
-  "Maintenance",
-  "Inspection, repair, defect rectification, parts, batteries and props",
-  "Aircraft history"
-],
-
-[
-  "Insurance",
-  "Public liability, aviation/drone liability, PI and workers compensation",
-  "Expiry-controlled"
-],
-
-[
-  "Incidents & occurrences",
-  "Incident reports, investigations and corrective actions",
-  "Retain as required"
-],
-
-[
-  "Aircraft & equipment",
-  "Aircraft manuals, serials, firmware, controllers and payloads",
-  "Asset life"
-],
-
-[
-  "Business & legal",
-  "ABN/ASIC, contracts, terms, privacy and subcontractor documents",
-  "Legal retention"
-],
-
-[
-  "Client / site permissions",
-  "Landowner permission, site access and client approvals",
-  "Keep with job"
-],
-
-[
-  "Emergency & contacts",
-  "Emergency response plan, emergency contacts and procedures",
-  "Current controlled copy"
-],
-
-[
-  "Other",
-  "Other operational documents",
-  "Set retention manually"
-]
-
-];
-
-
-
-/* ================================================================
-   APPLICATION STATE
-================================================================ */
-
-let supabase = null;
-
-let docs = [];
-
-let editId = null;
-
-let authMode = "signin";
-
-
-
-/* ================================================================
-   HELPERS
-================================================================ */
-
-function esc(value){
-
-  return String(value ?? "")
-    .replace(/[&<>"']/g, m => ({
-
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#39;"
-
-    }[m]));
-
-}
-
-
-
-function status(expiry){
-
-  if(!expiry)
-    return "nodate";
-
-  const days =
-    Math.ceil(
-      (
-        new Date(expiry + "T23:59:59")
-        -
-        new Date()
-      )
-      /
-      86400000
-    );
-
-  if(days < 0)
-    return "expired";
-
-  if(days <= 30)
-    return "soon";
-
-  return "current";
-}
-
-
-
-function badge(s){
-
-  if(s === "expired")
-    return '<span class="badge expired">Expired</span>';
-
-  if(s === "soon")
-    return '<span class="badge soon">Expiring soon</span>';
-
-  if(s === "current")
-    return '<span class="badge ok">Current</span>';
-
-  return '<span class="badge neutral">No expiry</span>';
-
-}
-
-
-
-function setAuthMessage(text,type=""){
-
-  const el =
+const authMsg =
     document.getElementById("authMsg");
 
-  el.textContent = text;
+const email =
+    document.getElementById("email");
 
-  el.className =
-    "help " + type;
+const password =
+    document.getElementById("password");
 
-}
+const signInTab =
+    document.getElementById("signInTab");
 
+const signUpTab =
+    document.getElementById("signUpTab");
 
+const logoutButton =
+    document.getElementById("logoutButton");
 
-/* ================================================================
-   AUTH UI
-================================================================ */
+const addButton =
+    document.getElementById("addButton");
 
-function showAuth(mode){
+const refreshButton =
+    document.getElementById("refreshButton");
 
-  authMode = mode;
+const documentModal =
+    document.getElementById("documentModal");
 
-  document.getElementById("authButton")
-    .textContent =
-      mode === "signin"
-      ? "Sign in"
-      : "Create account";
+const documentForm =
+    document.getElementById("documentForm");
 
-  document.getElementById("password")
-    .autocomplete =
-      mode === "signin"
-      ? "current-password"
-      : "new-password";
+const cancelButton =
+    document.getElementById("cancelButton");
 
-  document.getElementById("signInTab")
-    .className =
-      mode === "signin"
-      ? ""
-      : "secondary";
+const documentTable =
+    document.getElementById("documentTable");
 
-  document.getElementById("signUpTab")
-    .className =
-      mode === "signup"
-      ? ""
-      : "secondary";
+const loading =
+    document.getElementById("loading");
 
-  setAuthMessage("");
+const search =
+    document.getElementById("search");
 
-}
+const categoryFilter =
+    document.getElementById("categoryFilter");
 
 
+/* =========================================================
+   MESSAGE
+   ========================================================= */
 
-function showLogin(){
+function showMessage(text, type = "") {
 
-  document.getElementById("loginScreen")
-    .style.display = "block";
+    authMsg.textContent = text;
 
-  document.getElementById("app")
-    .style.display = "none";
-
-  document.getElementById("headerActions")
-    .innerHTML = "";
+    authMsg.className =
+        "message " + type;
 
 }
 
 
-
-async function showApp(){
-
-  document.getElementById("loginScreen")
-    .style.display = "none";
-
-  document.getElementById("app")
-    .style.display = "block";
-
-  document.getElementById("headerActions")
-    .innerHTML = `
-
-      <button
-        class="secondary"
-        onclick="showSetup()">
-        Setup SQL
-      </button>
-
-      <button
-        class="secondary"
-        onclick="signOut()">
-        Sign out
-      </button>
-
-    `;
-
-  fillCategories();
-
-  renderRecommendations();
-
-  await loadDocs();
-
-}
-
-
-
-/* ================================================================
-   INITIALISE SUPABASE
-================================================================ */
-
-async function init(){
-
-  const connection =
-    document.getElementById("connectionStatus");
-
-  if(
-    !CONFIG.SUPABASE_URL ||
-    !CONFIG.SUPABASE_KEY
-  ){
-
-    connection.textContent =
-      "Supabase configuration missing.";
-
-    return;
-
-  }
-
-
-  try{
-
-    supabase =
-      window.supabase.createClient(
-
-        CONFIG.SUPABASE_URL,
-
-        CONFIG.SUPABASE_KEY,
-
-        {
-
-          auth:{
-
-            persistSession:true,
-
-            autoRefreshToken:true,
-
-            detectSessionInUrl:true
-
-          }
-
-        }
-
-      );
-
-
-    connection.textContent =
-      "Supabase configured";
-
-
-    const {
-      data:{session}
-    } =
-      await supabase.auth.getSession();
-
-
-    if(session){
-
-      await showApp();
-
-    }else{
-
-      showLogin();
-
-    }
-
-
-    supabase.auth.onAuthStateChange(
-      async (event,session)=>{
-
-        if(session){
-
-          await showApp();
-
-        }else if(
-          event === "SIGNED_OUT"
-        ){
-
-          showLogin();
-
-        }
-
-      }
-    );
-
-
-  }catch(error){
-
-    console.error(error);
-
-    connection.textContent =
-      "Connection error";
-
-    setAuthMessage(
-      "Supabase could not be initialised: "
-      +
-      error.message,
-      "error"
-    );
-
-  }
-
-}
-
-
-
-/* ================================================================
-   AUTHENTICATION
-================================================================ */
-
-document
-.getElementById("authForm")
-.addEventListener(
-  "submit",
-  async event => {
-
-    event.preventDefault();
-
-
-    if(!supabase){
-
-      setAuthMessage(
-        "Supabase is not connected.",
-        "error"
-      );
-
-      return;
-
-    }
-
-
-    const email =
-      document.getElementById("email")
-      .value
-      .trim();
-
-
-    const password =
-      document.getElementById("password")
-      .value;
-
-
-    const button =
-      document.getElementById("authButton");
-
-
-    button.disabled = true;
-
-    setAuthMessage("Please wait...");
-
-
-    try{
-
-      if(authMode === "signup"){
-
-        const {
-          data,
-          error
-        } =
-        await supabase.auth.signUp({
-
-          email:email,
-
-          password:password,
-
-          options:{
-
-            emailRedirectTo:
-              window.location.href
-              .split("#")[0]
-
-          }
-
-        });
-
-
-        if(error){
-
-          setAuthMessage(
-            "Account creation failed: "
-            + error.message,
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        if(data.session){
-
-          setAuthMessage(
-            "Account created and signed in.",
-            "success"
-          );
-
-          await showApp();
-
-        }else{
-
-          setAuthMessage(
-            "Account created. Check your email for the confirmation link, then sign in.",
-            "success"
-          );
-
-        }
-
-
-      }else{
-
-        const {
-          data,
-          error
-        } =
-        await supabase.auth
-          .signInWithPassword({
-
-            email:email,
-
-            password:password
-
-          });
-
-
-        if(error){
-
-          setAuthMessage(
-            "Sign-in failed: "
-            + error.message,
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        if(data.session){
-
-          await showApp();
-
-        }
-
-      }
-
-
-    }catch(error){
-
-      console.error(error);
-
-      setAuthMessage(
-        "Unexpected error: "
-        + error.message,
-        "error"
-      );
-
-    }finally{
-
-      button.disabled = false;
-
-    }
-
-  }
+/* =========================================================
+   INITIALISE
+   ========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    initialise
 );
 
 
+async function initialise() {
 
-/* ================================================================
-   TEST CONNECTION
-================================================================ */
+    console.log("Baw Baw Aerial Services app starting...");
 
-async function testConnection(){
+    /*
+       Check that the Supabase JavaScript library loaded.
+    */
 
-  const el =
-    document.getElementById(
-      "connectionStatus"
+    if (!window.supabase) {
+
+        showMessage(
+            "ERROR: Supabase library failed to load. Make sure you are connected to the internet.",
+            "error"
+        );
+
+        return;
+    }
+
+    /*
+       Create Supabase client.
+    */
+
+    db = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
     );
 
+    showMessage(
+        "Connected. Checking login..."
+    );
 
-  if(!supabase){
-
-    el.textContent =
-      "Supabase is not initialised.";
-
-    return;
-
-  }
-
-
-  el.textContent = "Testing...";
-
-
-  try{
+    /*
+       Check current session.
+    */
 
     const {
-      error
-    } =
-    await supabase.auth.getSession();
+        data,
+        error
+    } = await db.auth.getSession();
 
+    if (error) {
 
-    if(error)
-      throw error;
+        console.error(error);
 
+        showMessage(
+            "Supabase error: " + error.message,
+            "error"
+        );
 
-    el.textContent =
-      "Supabase connection OK";
+        return;
+    }
 
-  }catch(error){
+    if (data.session) {
 
-    console.error(error);
+        currentUser =
+            data.session.user;
 
-    el.textContent =
-      "Connection failed: "
-      + error.message;
+        showApplication();
 
-  }
+    } else {
 
-}
-
-
-
-/* ================================================================
-   DOCUMENTS
-================================================================ */
-
-async function loadDocs(){
-
-  if(!supabase)
-    return;
-
-
-  document.getElementById(
-    "syncStatus"
-  ).textContent = "Loading...";
-
-
-  const {
-    data,
-    error
-  } =
-  await supabase
-    .from("documents")
-    .select("*")
-    .order(
-      "expiry_date",
-      {
-        ascending:true,
-        nullsFirst:false
-      }
-    );
-
-
-  if(error){
-
-    document.getElementById(
-      "syncStatus"
-    ).textContent =
-      error.message;
-
-    console.error(error);
-
-    render();
-
-    return;
-
-  }
-
-
-  docs = data || [];
-
-
-  document.getElementById(
-    "syncStatus"
-  ).textContent =
-    "Cloud connected";
-
-
-  render();
-
-}
-
-
-
-function fillCategories(){
-
-  const options =
-    CATEGORIES
-      .map(
-        category =>
-          `<option value="${esc(category[0])}">
-            ${esc(category[0])}
-          </option>`
-      )
-      .join("");
-
-
-  document.getElementById(
-    "dCategory"
-  ).innerHTML =
-    options;
-
-
-  document.getElementById(
-    "catFilter"
-  ).innerHTML =
-    '<option value="">All categories</option>'
-    +
-    options;
-
-}
-
-
-
-function renderRecommendations(){
-
-  document.getElementById(
-    "recommendations"
-  ).innerHTML =
-
-    CATEGORIES
-      .map(category => `
-
-        <tr>
-
-          <td>
-            <b>
-              ${esc(category[0])}
-            </b>
-          </td>
-
-          <td>
-            ${esc(category[1])}
-          </td>
-
-          <td>
-            ${esc(category[2])}
-          </td>
-
-        </tr>
-
-      `)
-      .join("");
-
-}
-
-
-
-function render(){
-
-  const search =
-    document.getElementById(
-      "search"
-    )
-    .value
-    .toLowerCase();
-
-
-  const category =
-    document.getElementById(
-      "catFilter"
-    )
-    .value;
-
-
-  const filterStatus =
-    document.getElementById(
-      "statusFilter"
-    )
-    .value;
-
-
-  const filtered =
-    docs.filter(document => {
-
-      const searchable = [
-
-        document.name,
-
-        document.category,
-
-        document.reference_no,
-
-        document.asset,
-
-        document.notes,
-
-        document.file_name
-
-      ]
-      .join(" ")
-      .toLowerCase();
-
-
-      return (
-
-        !search ||
-        searchable.includes(search)
-
-      )
-      &&
-      (
-
-        !category ||
-        document.category === category
-
-      )
-      &&
-      (
-
-        !filterStatus ||
-        status(document.expiry_date)
-        ===
-        filterStatus
-
-      );
-
-    });
-
-
-  document.getElementById(
-    "mTotal"
-  ).textContent =
-    docs.length;
-
-
-  document.getElementById(
-    "mCurrent"
-  ).textContent =
-    docs.filter(
-      d => status(d.expiry_date)
-      === "current"
-    ).length;
-
-
-  document.getElementById(
-    "mSoon"
-  ).textContent =
-    docs.filter(
-      d => status(d.expiry_date)
-      === "soon"
-    ).length;
-
-
-  document.getElementById(
-    "mExpired"
-  ).textContent =
-    docs.filter(
-      d => status(d.expiry_date)
-      === "expired"
-    ).length;
-
-
-  if(!filtered.length){
-
-    document.getElementById(
-      "rows"
-    ).innerHTML = `
-
-      <tr>
-
-        <td
-          colspan="6"
-          class="empty">
-
-          No documents found.
-
-        </td>
-
-      </tr>
-
-    `;
-
-    return;
-
-  }
-
-
-  document.getElementById(
-    "rows"
-  ).innerHTML =
-
-    filtered
-      .map(document => `
-
-        <tr>
-
-          <td>
-
-            <b>
-              ${esc(document.name)}
-            </b>
-
-            <br>
-
-            <span class="help">
-
-              ${esc(
-                document.reference_no || ""
-              )}
-
-              ${
-                document.asset
-                ?
-                " · " +
-                esc(document.asset)
-                :
-                ""
-              }
-
-            </span>
-
-          </td>
-
-
-          <td>
-            ${esc(document.category)}
-          </td>
-
-
-          <td>
-
-            ${
-              document.expiry_date
-              ?
-              new Date(
-                document.expiry_date
-                + "T00:00:00"
-              )
-              .toLocaleDateString(
-                "en-AU"
-              )
-              :
-              "—"
-            }
-
-            <br>
-
-            ${badge(
-              status(
-                document.expiry_date
-              )
-            )}
-
-          </td>
-
-
-          <td>
-            ${esc(
-              document.retention || "—"
-            )}
-          </td>
-
-
-          <td>
-
-            ${
-              document.file_name
-              ?
-              esc(document.file_name)
-              :
-              '<span class="help">No file</span>'
-            }
-
-          </td>
-
-
-          <td>
-
-            <div
-              style="
-                display:flex;
-                gap:5px;
-                flex-wrap:wrap
-              ">
-
-              ${
-                document.file_path
-                ?
-                `<button
-                  onclick="openFile('${document.id}')">
-                  Open
-                </button>`
-                :
-                ""
-              }
-
-
-              <button
-                class="secondary"
-                onclick="editDoc('${document.id}')">
-
-                Edit
-
-              </button>
-
-
-              <button
-                class="danger"
-                onclick="deleteDoc('${document.id}')">
-
-                Delete
-
-              </button>
-
-            </div>
-
-          </td>
-
-        </tr>
-
-      `)
-      .join("");
-
-}
-
-
-
-/* ================================================================
-   DOCUMENT MODAL
-================================================================ */
-
-function openModal(id=null){
-
-  editId = id;
-
-
-  document.getElementById(
-    "docForm"
-  ).reset();
-
-
-  document.getElementById(
-    "modalTitle"
-  ).textContent =
-    id
-    ?
-    "Edit document"
-    :
-    "Add document";
-
-
-  if(id){
-
-    const document =
-      docs.find(
-        d => d.id === id
-      );
-
-
-    if(!document)
-      return;
-
-
-    document.getElementById(
-      "dName"
-    ).value =
-      document.name || "";
-
-
-    document.getElementById(
-      "dCategory"
-    ).value =
-      document.category || "";
-
-
-    document.getElementById(
-      "dRef"
-    ).value =
-      document.reference_no || "";
-
-
-    document.getElementById(
-      "dAsset"
-    ).value =
-      document.asset || "";
-
-
-    document.getElementById(
-      "dIssue"
-    ).value =
-      document.issue_date || "";
-
-
-    document.getElementById(
-      "dExpiry"
-    ).value =
-      document.expiry_date || "";
-
-
-    document.getElementById(
-      "dRetention"
-    ).value =
-      document.retention ||
-      "No specific retention entered";
-
-
-    document.getElementById(
-      "dVersion"
-    ).value =
-      document.version || "";
-
-
-    document.getElementById(
-      "dNotes"
-    ).value =
-      document.notes || "";
-
-  }
-
-
-  document.getElementById(
-    "modal"
-  ).classList.add("open");
-
-}
-
-
-
-function closeModal(){
-
-  document.getElementById(
-    "modal"
-  ).classList.remove("open");
-
-  editId = null;
-
-}
-
-
-
-function editDoc(id){
-
-  openModal(id);
-
-}
-
-
-
-/* ================================================================
-   SAVE DOCUMENT
-================================================================ */
-
-document
-.getElementById("docForm")
-.addEventListener(
-  "submit",
-  async event => {
-
-    event.preventDefault();
-
-
-    if(!supabase){
-
-      alert(
-        "Supabase is not connected."
-      );
-
-      return;
+        showLogin();
 
     }
 
+    /*
+       Listen for login/logout events.
+    */
 
-    const {
-      data:{user}
-    } =
-    await supabase.auth.getUser();
+    db.auth.onAuthStateChange(
+        function(event, session) {
 
-
-    if(!user){
-
-      alert(
-        "Your session has expired. Please sign in again."
-      );
-
-      return;
-
-    }
-
-
-    const old =
-      editId
-      ?
-      docs.find(
-        d => d.id === editId
-      )
-      :
-      null;
-
-
-    const id =
-      editId ||
-      crypto.randomUUID();
-
-
-    const file =
-      document.getElementById(
-        "dFile"
-      ).files[0];
-
-
-    let filePath =
-      old?.file_path || null;
-
-
-    const saveButton =
-      document.getElementById(
-        "saveButton"
-      );
-
-
-    saveButton.disabled = true;
-
-
-    document.getElementById(
-      "syncStatus"
-    ).textContent =
-      "Saving...";
-
-
-    try{
-
-
-      /* FILE UPLOAD */
-
-      if(file){
-
-        const safeName =
-          file.name
-            .replace(
-              /[^a-zA-Z0-9._-]/g,
-              "_"
+            console.log(
+                "Auth event:",
+                event
             );
 
+            if (session) {
 
-        filePath =
-          user.id
-          + "/"
-          + id
-          + "/"
-          + safeName;
+                currentUser =
+                    session.user;
 
+                showApplication();
 
-        const {
-          error
-        } =
-        await supabase.storage
-          .from(
-            "operational-documents"
-          )
-          .upload(
+            } else {
 
-            filePath,
+                currentUser = null;
 
-            file,
-
-            {
-              upsert:true,
-
-              contentType:
-                file.type ||
-                "application/octet-stream"
+                showLogin();
 
             }
 
-          );
+        }
+    );
+
+}
 
 
-        if(error)
-          throw new Error(
-            "File upload failed: "
-            + error.message
-          );
+/* =========================================================
+   LOGIN / SIGNUP TABS
+   ========================================================= */
 
-      }
+signInTab.addEventListener(
+    "click",
+    function() {
 
-
-      /* DATABASE RECORD */
-
-      const row = {
-
-        id:id,
-
-        user_id:user.id,
-
-        name:
-          document.getElementById(
-            "dName"
-          ).value.trim(),
-
-        category:
-          document.getElementById(
-            "dCategory"
-          ).value,
-
-        reference_no:
-          document.getElementById(
-            "dRef"
-          ).value.trim()
-          || null,
-
-        asset:
-          document.getElementById(
-            "dAsset"
-          ).value.trim()
-          || null,
-
-        issue_date:
-          document.getElementById(
-            "dIssue"
-          ).value
-          || null,
-
-        expiry_date:
-          document.getElementById(
-            "dExpiry"
-          ).value
-          || null,
-
-        retention:
-          document.getElementById(
-            "dRetention"
-          ).value,
-
-        version:
-          document.getElementById(
-            "dVersion"
-          ).value.trim()
-          || null,
-
-        notes:
-          document.getElementById(
-            "dNotes"
-          ).value.trim()
-          || null,
-
-        file_path:
-          filePath,
-
-        file_name:
-          file
-          ?
-          file.name
-          :
-          old?.file_name || null,
-
-        file_type:
-          file
-          ?
-          file.type
-          :
-          old?.file_type || null,
-
-        file_size:
-          file
-          ?
-          file.size
-          :
-          old?.file_size || null,
-
-        updated_at:
-          new Date().toISOString()
-
-      };
-
-
-      let result;
-
-
-      if(editId){
-
-        result =
-          await supabase
-            .from("documents")
-            .update(row)
-            .eq("id",id);
-
-      }else{
-
-        result =
-          await supabase
-            .from("documents")
-            .insert(row);
-
-      }
-
-
-      if(result.error)
-        throw new Error(
-          "Could not save record: "
-          + result.error.message
+        authForm.classList.remove(
+            "hidden"
         );
 
+        signupForm.classList.add(
+            "hidden"
+        );
 
-      closeModal();
+        signInTab.classList.add(
+            "tab-active"
+        );
 
-      await loadDocs();
+        signUpTab.classList.remove(
+            "tab-active"
+        );
 
+        signUpTab.classList.add(
+            "secondary"
+        );
 
-    }catch(error){
-
-      console.error(error);
-
-      alert(error.message);
-
-      document.getElementById(
-        "syncStatus"
-      ).textContent =
-        "Save failed";
-
-    }finally{
-
-      saveButton.disabled = false;
+        showMessage("");
 
     }
-
-  }
 );
 
 
+signUpTab.addEventListener(
+    "click",
+    function() {
 
-/* ================================================================
-   OPEN PRIVATE FILE
-================================================================ */
+        authForm.classList.add(
+            "hidden"
+        );
 
-async function openFile(id){
+        signupForm.classList.remove(
+            "hidden"
+        );
 
-  const document =
-    docs.find(
-      d => d.id === id
+        signUpTab.classList.add(
+            "tab-active"
+        );
+
+        signUpTab.classList.remove(
+            "secondary"
+        );
+
+        signInTab.classList.remove(
+            "tab-active"
+        );
+
+        showMessage("");
+
+    }
+);
+
+
+/* =========================================================
+   SIGN IN
+   ========================================================= */
+
+authForm.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        console.log(
+            "SIGN IN BUTTON PRESSED"
+        );
+
+        const userEmail =
+            email.value.trim();
+
+        const userPassword =
+            password.value;
+
+        if (!userEmail ||
+            !userPassword) {
+
+            showMessage(
+                "Enter your email and password.",
+                "error"
+            );
+
+            return;
+        }
+
+        const button =
+            document.getElementById(
+                "signInButton"
+            );
+
+        button.disabled = true;
+
+        button.textContent =
+            "Signing in...";
+
+        showMessage(
+            "Signing in..."
+        );
+
+        try {
+
+            const {
+                data,
+                error
+            } =
+                await db.auth.signInWithPassword({
+
+                    email:
+                        userEmail,
+
+                    password:
+                        userPassword
+
+                });
+
+            console.log(
+                "Supabase login:",
+                data,
+                error
+            );
+
+            if (error) {
+
+                showMessage(
+                    error.message,
+                    "error"
+                );
+
+                return;
+            }
+
+            if (!data.session) {
+
+                showMessage(
+                    "Login completed but Supabase did not return a session.",
+                    "error"
+                );
+
+                return;
+            }
+
+            showMessage(
+                "Signed in successfully.",
+                "success"
+            );
+
+        }
+
+        catch(error) {
+
+            console.error(
+                "LOGIN ERROR:",
+                error
+            );
+
+            showMessage(
+                "Login error: " +
+                error.message,
+                "error"
+            );
+
+        }
+
+        finally {
+
+            button.disabled = false;
+
+            button.textContent =
+                "Sign in";
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   SIGN UP
+   ========================================================= */
+
+signupForm.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const signupEmail =
+            document.getElementById(
+                "signupEmail"
+            ).value.trim();
+
+        const signupPassword =
+            document.getElementById(
+                "signupPassword"
+            ).value;
+
+        if (!signupEmail ||
+            !signupPassword) {
+
+            showMessage(
+                "Enter an email and password.",
+                "error"
+            );
+
+            return;
+        }
+
+        showMessage(
+            "Creating account..."
+        );
+
+        try {
+
+            const {
+                data,
+                error
+            } =
+                await db.auth.signUp({
+
+                    email:
+                        signupEmail,
+
+                    password:
+                        signupPassword
+
+                });
+
+            console.log(
+                "Signup:",
+                data,
+                error
+            );
+
+            if (error) {
+
+                showMessage(
+                    error.message,
+                    "error"
+                );
+
+                return;
+            }
+
+            if (data.session) {
+
+                showMessage(
+                    "Account created and signed in.",
+                    "success"
+                );
+
+            } else {
+
+                showMessage(
+                    "Account created. Check your email and confirm your account before signing in.",
+                    "success"
+                );
+
+            }
+
+        }
+
+        catch(error) {
+
+            console.error(error);
+
+            showMessage(
+                "Signup error: " +
+                error.message,
+                "error"
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   SHOW LOGIN / APPLICATION
+   ========================================================= */
+
+function showLogin() {
+
+    loginPage.classList.remove(
+        "hidden"
     );
 
-
-  if(
-    !document ||
-    !document.file_path
-  )
-    return;
-
-
-  const {
-    data,
-    error
-  } =
-  await supabase.storage
-    .from(
-      "operational-documents"
-    )
-    .createSignedUrl(
-      document.file_path,
-      300
+    app.classList.add(
+        "hidden"
     );
-
-
-  if(error){
-
-    alert(error.message);
-
-    return;
-
-  }
-
-
-  window.open(
-    data.signedUrl,
-    "_blank",
-    "noopener"
-  );
 
 }
 
 
+function showApplication() {
 
-/* ================================================================
-   DELETE
-================================================================ */
-
-async function deleteDoc(id){
-
-  if(
-    !confirm(
-      "Delete this document and its cloud file?"
-    )
-  )
-    return;
-
-
-  const document =
-    docs.find(
-      d => d.id === id
+    loginPage.classList.add(
+        "hidden"
     );
 
+    app.classList.remove(
+        "hidden"
+    );
 
-  try{
+    loadDocuments();
 
-
-    if(document?.file_path){
-
-      const {
-        error
-      } =
-      await supabase.storage
-        .from(
-          "operational-documents"
-        )
-        .remove([
-          document.file_path
-        ]);
+}
 
 
-      if(error)
-        console.warn(
-          "Storage deletion:",
-          error.message
-        );
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+logoutButton.addEventListener(
+    "click",
+    async function() {
+
+        await db.auth.signOut();
+
+    }
+);
+
+
+/* =========================================================
+   LOAD DOCUMENTS
+   ========================================================= */
+
+async function loadDocuments() {
+
+    loading.textContent =
+        "Loading documents...";
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await db
+                .from("documents")
+                .select("*")
+                .order(
+                    "expiry_date",
+                    {
+                        ascending: true,
+                        nullsFirst: false
+                    }
+                );
+
+        if (error) {
+
+            console.error(error);
+
+            loading.textContent =
+                "Error: " +
+                error.message;
+
+            return;
+        }
+
+        documents =
+            data || [];
+
+        renderDocuments();
 
     }
 
+    catch(error) {
 
-    const {
-      error
-    } =
-    await supabase
-      .from("documents")
-      .delete()
-      .eq("id",id);
+        console.error(error);
 
+        loading.textContent =
+            "Error loading documents.";
 
-    if(error)
-      throw error;
-
-
-    await loadDocs();
-
-
-  }catch(error){
-
-    alert(
-      "Delete failed: "
-      + error.message
-    );
-
-  }
+    }
 
 }
 
 
+/* =========================================================
+   STATUS
+   ========================================================= */
 
-/* ================================================================
-   SQL SETUP UI
-================================================================ */
+function getStatus(expiryDate) {
 
-function showSetup(){
+    if (!expiryDate) {
 
-  document.getElementById(
-    "sqlBox"
-  ).value =
-    SETUP_SQL;
+        return {
+            text: "No expiry",
+            className: "current"
+        };
 
-  document.getElementById(
-    "setupModal"
-  ).classList.add("open");
+    }
+
+    const today =
+        new Date();
+
+    today.setHours(
+        0,0,0,0
+    );
+
+    const expiry =
+        new Date(
+            expiryDate +
+            "T00:00:00"
+        );
+
+    const difference =
+        Math.ceil(
+            (
+                expiry -
+                today
+            ) /
+            86400000
+        );
+
+    if (difference < 0) {
+
+        return {
+            text:
+                "Expired",
+            className:
+                "expired"
+        };
+
+    }
+
+    if (difference <= 30) {
+
+        return {
+            text:
+                difference +
+                " days",
+            className:
+                "expiring"
+        };
+
+    }
+
+    return {
+        text:
+            "Current",
+        className:
+            "current"
+    };
 
 }
 
 
+/* =========================================================
+   RENDER DOCUMENTS
+   ========================================================= */
 
-function closeSetup(){
+function renderDocuments() {
 
-  document.getElementById(
-    "setupModal"
-  ).classList.remove("open");
+    const searchText =
+        search.value
+            .trim()
+            .toLowerCase();
+
+    const category =
+        categoryFilter.value;
+
+    const filtered =
+        documents.filter(
+            function(doc) {
+
+                const matchesSearch =
+                    !searchText ||
+
+                    (
+                        (doc.name || "")
+                            .toLowerCase()
+                            .includes(searchText)
+                    ) ||
+
+                    (
+                        (doc.reference_no || "")
+                            .toLowerCase()
+                            .includes(searchText)
+                    ) ||
+
+                    (
+                        (doc.asset || "")
+                            .toLowerCase()
+                            .includes(searchText)
+                    );
+
+                const matchesCategory =
+                    !category ||
+                    doc.category === category;
+
+                return (
+                    matchesSearch &&
+                    matchesCategory
+                );
+
+            }
+        );
+
+
+    documentTable.innerHTML = "";
+
+
+    filtered.forEach(
+        function(doc) {
+
+            const status =
+                getStatus(
+                    doc.expiry_date
+                );
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+            row.innerHTML = `
+
+                <td>
+                    <strong>
+                        ${escapeHtml(
+                            doc.name || ""
+                        )}
+                    </strong>
+
+                    ${
+                        doc.file_name
+                        ?
+                        `<div class="small">
+                            ${escapeHtml(
+                                doc.file_name
+                            )}
+                        </div>`
+                        :
+                        ""
+                    }
+
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        doc.category || ""
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        doc.reference_no || "-"
+                    )}
+                </td>
+
+                <td>
+                    ${
+                        doc.expiry_date
+                        ?
+                        formatDate(
+                            doc.expiry_date
+                        )
+                        :
+                        "-"
+                    }
+                </td>
+
+                <td>
+                    <span class="badge ${status.className}">
+                        ${status.text}
+                    </span>
+                </td>
+
+                <td>
+
+                    ${
+                        doc.file_path
+                        ?
+                        `<button
+                            class="secondary"
+                            onclick="openDocument('${doc.id}')">
+                            Open
+                        </button>`
+                        :
+                        ""
+                    }
+
+                    <button
+                        class="secondary"
+                        onclick="editDocument('${doc.id}')">
+                        Edit
+                    </button>
+
+                    <button
+                        class="danger"
+                        onclick="deleteDocument('${doc.id}')">
+                        Delete
+                    </button>
+
+                </td>
+
+            `;
+
+            documentTable.appendChild(
+                row
+            );
+
+        }
+    );
+
+
+    loading.textContent =
+        filtered.length +
+        " document(s)";
+
+    updateMetrics();
 
 }
 
 
+/* =========================================================
+   METRICS
+   ========================================================= */
 
-async function copySQL(){
+function updateMetrics() {
 
-  try{
+    let current = 0;
+    let expiring = 0;
+    let expired = 0;
 
-    await navigator.clipboard.writeText(
-      SETUP_SQL
+    documents.forEach(
+        function(doc) {
+
+            const status =
+                getStatus(
+                    doc.expiry_date
+                );
+
+            if (
+                status.className ===
+                "expired"
+            ) {
+
+                expired++;
+
+            }
+            else if (
+                status.className ===
+                "expiring"
+            ) {
+
+                expiring++;
+
+            }
+            else {
+
+                current++;
+
+            }
+
+        }
     );
 
-    alert(
-      "SQL copied to clipboard."
-    );
+    document.getElementById(
+        "totalCount"
+    ).textContent =
+        documents.length;
 
-  }catch(error){
+    document.getElementById(
+        "currentCount"
+    ).textContent =
+        current;
 
-    const box =
-      document.getElementById(
-        "sqlBox"
-      );
+    document.getElementById(
+        "expiringCount"
+    ).textContent =
+        expiring;
 
-    box.select();
-
-    document.execCommand("copy");
-
-    alert(
-      "SQL copied."
-    );
-
-  }
+    document.getElementById(
+        "expiredCount"
+    ).textContent =
+        expired;
 
 }
 
 
+/* =========================================================
+   ADD DOCUMENT
+   ========================================================= */
 
-function downloadSQL(){
+addButton.addEventListener(
+    "click",
+    function() {
 
-  const blob =
-    new Blob(
-      [SETUP_SQL],
-      {
-        type:"text/plain"
-      }
-    );
+        documentForm.reset();
+
+        document.getElementById(
+            "documentId"
+        ).value = "";
+
+        document.getElementById(
+            "modalTitle"
+        ).textContent =
+            "Add document";
+
+        document.getElementById(
+            "fileInfo"
+        ).textContent = "";
+
+        documentModal.style.display =
+            "flex";
+
+    }
+);
 
 
-  const url =
-    URL.createObjectURL(blob);
+/* =========================================================
+   CANCEL MODAL
+   ========================================================= */
+
+cancelButton.addEventListener(
+    "click",
+    closeModal
+);
 
 
-  const a =
-    document.createElement("a");
+function closeModal() {
 
-
-  a.href = url;
-
-  a.download =
-    "setup.sql";
-
-
-  document.body.appendChild(a);
-
-  a.click();
-
-  a.remove();
-
-  URL.revokeObjectURL(url);
+    documentModal.style.display =
+        "none";
 
 }
 
 
+/* =========================================================
+   SAVE DOCUMENT
+   ========================================================= */
 
-/* ================================================================
-   START
-================================================================ */
+documentForm.addEventListener(
+    "submit",
+    async function(event) {
 
-init();
+        event.preventDefault();
+
+        if (!currentUser) {
+
+            alert(
+                "You are not signed in."
+            );
+
+            return;
+        }
+
+        const id =
+            document.getElementById(
+                "documentId"
+            ).value;
+
+        const record = {
+
+            user_id:
+                currentUser.id,
+
+            name:
+                document.getElementById(
+                    "docName"
+                ).value.trim(),
+
+            category:
+                document.getElementById(
+                    "docCategory"
+                ).value,
+
+            reference_no:
+                document.getElementById(
+                    "docReference"
+                ).value.trim(),
+
+            asset:
+                document.getElementById(
+                    "docAsset"
+                ).value.trim(),
+
+            issue_date:
+                document.getElementById(
+                    "docIssueDate"
+                ).value || null,
+
+            expiry_date:
+                document.getElementById(
+                    "docExpiryDate"
+                ).value || null,
+
+            retention:
+                document.getElementById(
+                    "docRetention"
+                ).value.trim(),
+
+            version:
+                document.getElementById(
+                    "docVersion"
+                ).value.trim(),
+
+            notes:
+                document.getElementById(
+                    "docNotes"
+                ).value.trim()
+
+        };
+
+
+        const file =
+            document.getElementById(
+                "docFile"
+            ).files[0];
+
+
+        try {
+
+            /*
+               Upload file if one was selected.
+            */
+
+            if (file) {
+
+                const safeName =
+                    file.name
+                        .replace(
+                            /[^a-zA-Z0-9._-]/g,
+                            "_"
+                        );
+
+                const filePath =
+                    currentUser.id +
+                    "/" +
+                    Date.now() +
+                    "_" +
+                    safeName;
+
+
+                const {
+                    error:
+                        uploadError
+                } =
+                    await db.storage
+                        .from(
+                            "operational-documents"
+                        )
+                        .upload(
+                            filePath,
+                            file
+                        );
+
+
+                if (uploadError) {
+
+                    throw uploadError;
+
+                }
+
+
+                record.file_path =
+                    filePath;
+
+                record.file_name =
+                    file.name;
+
+                record.file_type =
+                    file.type;
+
+                record.file_size =
+                    file.size;
+
+            }
+
+
+            if (id) {
+
+                /*
+                   UPDATE
+                */
+
+                const {
+                    error
+                } =
+                    await db
+                        .from("documents")
+                        .update(record)
+                        .eq(
+                            "id",
+                            id
+                        );
+
+                if (error)
+                    throw error;
+
+            }
+            else {
+
+                /*
+                   INSERT
+                */
+
+                const {
+                    error
+                } =
+                    await db
+                        .from("documents")
+                        .insert(record);
+
+                if (error)
+                    throw error;
+
+            }
+
+
+            closeModal();
+
+            await loadDocuments();
+
+        }
+
+        catch(error) {
+
+            console.error(error);
+
+            alert(
+                "Could not save document:\n\n" +
+                error.message
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   EDIT DOCUMENT
+   ========================================================= */
+
+window.editDocument =
+    function(id) {
+
+        const doc =
+            documents.find(
+                function(item) {
+                    return item.id === id;
+                }
+            );
+
+        if (!doc)
+            return;
+
+        document.getElementById(
+            "documentId"
+        ).value =
+            doc.id;
+
+        document.getElementById(
+            "docName"
+        ).value =
+            doc.name || "";
+
+        document.getElementById(
+            "docCategory"
+        ).value =
+            doc.category || "";
+
+        document.getElementById(
+            "docReference"
+        ).value =
+            doc.reference_no || "";
+
+        document.getElementById(
+            "docAsset"
+        ).value =
+            doc.asset || "";
+
+        document.getElementById(
+            "docIssueDate"
+        ).value =
+            doc.issue_date || "";
+
+        document.getElementById(
+            "docExpiryDate"
+        ).value =
+            doc.expiry_date || "";
+
+        document.getElementById(
+            "docRetention"
+        ).value =
+            doc.retention || "";
+
+        document.getElementById(
+            "docVersion"
+        ).value =
+            doc.version || "";
+
+        document.getElementById(
+            "docNotes"
+        ).value =
+            doc.notes || "";
+
+        document.getElementById(
+            "fileInfo"
+        ).textContent =
+            doc.file_name
+            ?
+            "Current file: " +
+            doc.file_name
+            :
+            "No file attached.";
+
+        document.getElementById(
+            "modalTitle"
+        ).textContent =
+            "Edit document";
+
+        documentModal.style.display =
+            "flex";
+
+    };
+
+
+/* =========================================================
+   OPEN DOCUMENT
+   ========================================================= */
+
+window.openDocument =
+    async function(id) {
+
+        const doc =
+            documents.find(
+                function(item) {
+                    return item.id === id;
+                }
+            );
+
+        if (!doc ||
+            !doc.file_path) {
+
+            alert(
+                "No file attached."
+            );
+
+            return;
+        }
+
+        try {
+
+            const {
+                data,
+                error
+            } =
+                await db.storage
+                    .from(
+                        "operational-documents"
+                    )
+                    .createSignedUrl(
+                        doc.file_path,
+                        300
+                    );
+
+            if (error)
+                throw error;
+
+            window.open(
+                data.signedUrl,
+                "_blank"
+            );
+
+        }
+
+        catch(error) {
+
+            alert(
+                "Could not open file:\n\n" +
+                error.message
+            );
+
+        }
+
+    };
+
+
+/* =========================================================
+   DELETE DOCUMENT
+   ========================================================= */
+
+window.deleteDocument =
+    async function(id) {
+
+        const doc =
+            documents.find(
+                function(item) {
+                    return item.id === id;
+                }
+            );
+
+        if (!doc)
+            return;
+
+        const confirmed =
+            confirm(
+                "Delete \"" +
+                doc.name +
+                "\"?"
+            );
+
+        if (!confirmed)
+            return;
+
+
+        try {
+
+            /*
+               Delete storage file first.
+            */
+
+            if (doc.file_path) {
+
+                await db.storage
+                    .from(
+                        "operational-documents"
+                    )
+                    .remove([
+                        doc.file_path
+                    ]);
+
+            }
+
+
+            const {
+                error
+            } =
+                await db
+                    .from("documents")
+                    .delete()
+                    .eq(
+                        "id",
+                        id
+                    );
+
+            if (error)
+                throw error;
+
+            await loadDocuments();
+
+        }
+
+        catch(error) {
+
+            alert(
+                "Could not delete document:\n\n" +
+                error.message
+            );
+
+        }
+
+    };
+
+
+/* =========================================================
+   SEARCH / FILTER / REFRESH
+   ========================================================= */
+
+search.addEventListener(
+    "input",
+    renderDocuments
+);
+
+categoryFilter.addEventListener(
+    "change",
+    renderDocuments
+);
+
+refreshButton.addEventListener(
+    "click",
+    loadDocuments
+);
+
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+
+function formatDate(date) {
+
+    if (!date)
+        return "";
+
+    const parts =
+        date.split("-");
+
+    return (
+        parts[2] +
+        "/" +
+        parts[1] +
+        "/" +
+        parts[0]
+    );
+
+}
+
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
 
 </script>
 
